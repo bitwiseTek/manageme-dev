@@ -3,7 +3,7 @@ package data
 /**
  *
  * @author Sika Kay
- * @date 22/07/17
+ * @date 22/11/17
  *
  */
 import (
@@ -21,7 +21,7 @@ type UserRepository struct {
 	C *mgo.Collection
 }
 
-//CreateUser persists User to MongoDB
+//AddUser persists User to MongoDB
 func (r *UserRepository) AddUser(user *models.User) error {
 	objID := bson.NewObjectId()
 	user.Id = objID
@@ -39,7 +39,7 @@ func (r *UserRepository) AddUser(user *models.User) error {
 	return err
 }
 
-//SignIn
+//SignIn logs users into the system
 func (r *UserRepository) SignIn(user *models.User) (u models.User, err error) {
 	err = r.C.Find(bson.M{"email": user.Email}).One(&u)
 	if err != nil {
@@ -53,6 +53,7 @@ func (r *UserRepository) SignIn(user *models.User) (u models.User, err error) {
 	return
 }
 
+//GetUsers gets all users
 func (r *UserRepository) GetUsers() []models.User {
 	var users []models.User
 	iter := r.C.Find(nil).Iter()
@@ -63,12 +64,14 @@ func (r *UserRepository) GetUsers() []models.User {
 	return users
 }
 
-func (r *UserRepository) GetUserById(id string) (user models.User, err error) {
+//GetUserByID gets user associated with an ID
+func (r *UserRepository) GetUserByID(id string) (user models.User, err error) {
 	err = r.C.Find(bson.ObjectIdHex(id)).One(&user)
 	return
 }
 
-func (r *UserRepository) EditUserById(user *models.User) error {
+//EditUserByID edits user associated with an ID
+func (r *UserRepository) EditUserByID(user *models.User) error {
 	err := r.C.Update(bson.M{"_id": user.Id},
 		bson.M{"$set": bson.M{
 			"name":         user.Name,

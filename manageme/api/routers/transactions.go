@@ -3,13 +3,13 @@ package routers
 /**
  *
  * @author Sika Kay
- * @date 20/07/17
+ * @date 22/11/17
  *
  */
 
 import (
-	"github.com/bitwiseTek/spottnow-dev/spottnow/api/common"
-	"github.com/bitwiseTek/spottnow-dev/spottnow/api/controllers"
+	"github.com/bitwiseTek/manageme-dev/manageme/api/common"
+	"github.com/bitwiseTek/manageme-dev/manageme/api/controllers"
 	"github.com/codegangsta/negroni"
 	"github.com/gorilla/mux"
 )
