@@ -12,7 +12,7 @@ import (
 
 	"time"
 
-	"github.com/bitwiseTek/spottnow-dev/spottnow/api/models"
+	"github.com/bitwiseTek/manageme-dev/manageme/api/models"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -24,7 +24,7 @@ type UserRepository struct {
 //AddUser persists User to MongoDB
 func (r *UserRepository) AddUser(user *models.User) error {
 	objID := bson.NewObjectId()
-	user.Id = objID
+	user.ID = objID
 	hpass, err := bcrypt.GenerateFromPassword([]byte(user.Password), bcrypt.DefaultCost)
 	if err != nil {
 		panic(err)
@@ -33,6 +33,7 @@ func (r *UserRepository) AddUser(user *models.User) error {
 
 	user.Password = ""
 	user.Status = "Active"
+	user.Role = "Customer"
 	user.CreatedAt = time.Now()
 	user.UpdatedAt = time.Now()
 	err = r.C.Insert(&user)
@@ -49,6 +50,7 @@ func (r *UserRepository) SignIn(user *models.User) (u models.User, err error) {
 	err = bcrypt.CompareHashAndPassword(u.HashPassword, []byte(user.Password))
 	if err != nil {
 		u = models.User{}
+		u.LastLogin = time.Now()
 	}
 	return
 }
@@ -72,7 +74,7 @@ func (r *UserRepository) GetUserByID(id string) (user models.User, err error) {
 
 //EditUserByID edits user associated with an ID
 func (r *UserRepository) EditUserByID(user *models.User) error {
-	err := r.C.Update(bson.M{"_id": user.Id},
+	err := r.C.Update(bson.M{"_id": user.ID},
 		bson.M{"$set": bson.M{
 			"name":         user.Name,
 			"dob":          user.DOB,
