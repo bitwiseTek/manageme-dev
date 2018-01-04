@@ -111,7 +111,8 @@ type (
 		EmailCompany      string        `json:"emailcompany"`
 		Image             string        `json:"image"`
 		AccommodationType string        `json:"accommodationtype"`
-		Phone             string        `json:"phone"`
+		PrimaryPhone      string        `json:"primaryphone"`
+		SecondaryPhone    string        `json:"secondaryphone"`
 		EmergencyContact
 	}
 
@@ -212,6 +213,7 @@ type (
 		CarryForward         string        `json:"carryforward"`
 		CarryForwardedLeaves int           `json:"carryforwardedleaves"`
 		TotalLeavesAllocated int           `json:"totalleavesallocated"`
+		AllocatedOn          time.Time     `json:"allocatedon,omitempty"`
 	}
 
 	// Employees/LeaveApplication for DB Model
@@ -227,7 +229,7 @@ type (
 		HalfDayDate    string        `json:"halfdaydate"`
 		TotalLeaveDays int           `json:"totalleavedays"`
 		Status         string        `json:"status,omitempty"`
-		AppliedAt      time.Time     `json:"createdat,omitempty"`
+		AppliedAt      time.Time     `json:"appliedat,omitempty"`
 		UpdatedAt      time.Time     `json:"updatedat,omitempty"`
 	}
 
@@ -607,6 +609,7 @@ type (
 		EmployeeContact
 		Biodata
 		ExpenseClaim
+		LeaveAllocation
 		LeaveApplication
 		LeaveBlockList
 		HolidayList
