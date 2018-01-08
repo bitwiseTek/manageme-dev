@@ -598,6 +598,33 @@ func (r *OrgRepository) GetOrgByUserID(userID string) (orgs models.Org, err erro
 	return
 }
 
+//GetOrgBillingsByUserID gets org/billings associated with a UserID
+func (r *OrgRepository) GetOrgBillingsByUserID(userID string) []models.Org {
+	var billings []models.Org
+	userid := bson.ObjectIdHex(userID)
+	iter := r.C.Find(bson.M{"userid": userid}).Iter()
+	result := models.Org{}
+	for iter.Next(&result) {
+		billings = append(billings, result)
+	}
+	return billings
+}
+
+//GetOrgUsersByUserID gets org/users associated with a UserID
+func (r *OrgRepository) GetOrgUsersByUserID(userID string) []models.Org {
+	var orgs []models.Org
+	userid := bson.ObjectIdHex(userID)
+	iter := r.C.Find(bson.M{"userid": userid}).Iter()
+	result := models.Org{}
+	for iter.Next(&result) {
+		users := result.Users
+		for _, u := range users {
+			orgs = append(orgs, u)
+		}
+	}
+	return orgs
+}
+
 //EditOrgByID edits org associated with an ID
 func (r *OrgRepository) EditOrgByID(org *models.Org) error {
 	err := r.C.Update(bson.M{"_id": org.ID},

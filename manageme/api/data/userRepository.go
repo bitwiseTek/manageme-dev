@@ -76,10 +76,7 @@ func (r *UserRepository) GetUserByID(id string) (user models.User, err error) {
 func (r *UserRepository) EditUserByID(user *models.User) error {
 	err := r.C.Update(bson.M{"_id": user.ID},
 		bson.M{"$set": bson.M{
-			"name":         user.Name,
-			"dob":          user.DOB,
-			"phone":        user.Phone,
-			"profileimage": user.ProfileImage,
+			"role": 		user.Role,
 			"status":       user.Status,
 			"updatedat":    time.Now(),
 		}})
