@@ -741,7 +741,7 @@ type (
 		UpdatedAt              time.Time     `json:"updatedat,omitempty"`
 		CompanyContact
 		Billing
-		Users []Users
+		Users []*User `json:"users"`
 		Departments
 		Designations
 		SalaryModes
