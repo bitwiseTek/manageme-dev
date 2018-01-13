@@ -66,7 +66,7 @@ type (
 		MaxUsers     int            `json:"maxusers"`
 		LastBilled   time.Time      `json:"postalcode"`
 		Status       string         `json:"status"`
-		Transactions []*Transaction `json:"transactions"`
+		Transactions Transaction    `json:"transactions"`
 	}
 
 	// Roles/Permission for DB Model
@@ -85,7 +85,7 @@ type (
 		Status        string        `json:"status,omitempty"`
 		CreatedAt     time.Time     `json:"createdat,omitempty"`
 		UpdatedAt     time.Time     `json:"updatedat,omitempty"`
-		Permissions   []*Permission `json:"permissions"`
+		Permissions   Permission    `json:"permissions"`
 	}
 
 	// EmployeeContacts/EmergencyContact for DB Model
@@ -113,7 +113,7 @@ type (
 		AccommodationType string              `json:"accommodationtype"`
 		PrimaryPhone      string              `json:"primaryphone"`
 		SecondaryPhone    string              `json:"secondaryphone"`
-		EmergencyContacts []*EmergencyContact `json:"emrgcontacts"`
+		EmergencyContacts EmergencyContact    `json:"emrgcontacts"`
 	}
 
 	// Biodatas/PersonalIdentification for DB Model
@@ -167,10 +167,10 @@ type (
 		DisabilityType          string                    `json:"disabilitytype"`
 		Nationality             string                    `json:"nationality"`
 		StateOfOrigin           string                    `json:"stateoforigin"`
-		PersonalIdentifications []*PersonalIdentification `json:"personalidentifications"`
-		HealthDetails           []*HealthDetail           `json:"healthdetails"`
-		Educations              []*Education              `json:"educations"`
-		WorkExperiences         []*WorkExperience         `json:"workexperiences"`
+		PersonalIdentifications PersonalIdentification    `json:"personalidentifications"`
+		HealthDetails           HealthDetail              `json:"healthdetails"`
+		Educations              Education                 `json:"educations"`
+		WorkExperiences         WorkExperience            `json:"workexperiences"`
 	}
 
 	// ExpenseClaims/ExpenseDetail for DB Model
@@ -199,7 +199,7 @@ type (
 		PaymentMode           string           `json:"paymentmode"`
 		Status                string           `json:"status,omitempty"`
 		Remarks               string           `json:"remarks"`
-		ExpenseDetails        []*ExpenseDetail `json:"expensedetails"`
+		ExpenseDetails        ExpenseDetail    `json:"expensedetails"`
 	}
 
 	// Employees/LeaveAllocation for DB Model
@@ -251,8 +251,8 @@ type (
 		ID           bson.ObjectId  `bson:"_id,omitempty" json:"id"`
 		Name         string         `json:"name"`
 		ApplyAll     bool           `json:"applyall"`
-		BlockedDates []*BlockedDate `json:"blockdates"`
-		AllowedUsers []*AllowedUser `json:"allowedusers"`
+		BlockedDates BlockedDate    `json:"blockdates"`
+		AllowedUsers AllowedUser    `json:"allowedusers"`
 	}
 
 	// HolidayLists/Holiday for DB Model
@@ -269,7 +269,7 @@ type (
 		FromDate  string        `json:"fromdate"`
 		ToDate    string        `json:"todate"`
 		WeeklyOff bool          `json:"weeklyoff"`
-		Holidays  []*Holiday    `json:"holidays"`
+		Holidays  Holiday       `json:"holidays"`
 	}
 
 	// Appraisals/AppraisalTemplate for DB Model
@@ -298,8 +298,8 @@ type (
 		TotalScore         float32              `json:"totalscore"`
 		Status             string               `json:"status,omitempty"`
 		AppraisedAt        time.Time            `json:"appraisedat,omitempty"`
-		AppraisalTemplates []*AppraisalTemplate `json:"appraisaltemplates"`
-		AppraisalGoals     []*AppraisalGoal     `json:"appraisalgoals"`
+		AppraisalTemplates AppraisalTemplate    `json:"appraisaltemplates"`
+		AppraisalGoals     AppraisalGoal        `json:"appraisalgoals"`
 	}
 
 	// Employees/Exit for DB Model
@@ -342,7 +342,7 @@ type (
 		IsAmountLwpBased     bool               `json:"isamountlwpbased"`
 		Amount               float32            `json:"amount"`
 		DefaulAmount         float32            `json:"defaultamount"`
-		SalaryComponents     []*SalaryComponent `json:"salarycomponents"`
+		SalaryComponents     SalaryComponent    `json:"salarycomponents"`
 	}
 
 	// Employees/SalaryStructure for DB Model
@@ -359,8 +359,8 @@ type (
 		TotalDeductions  float32           `json:"totaldeductions"`
 		TotalEarnings    float32           `json:"totalearnings"`
 		NetPay           float32           `json:"netpay"`
-		SalaryEmployees  []*SalaryEmployee `json:"salaryemployees"`
-		SalaryDetails    []*SalaryDetail   `json:"salarydetails"`
+		SalaryEmployees  SalaryEmployee    `json:"salaryemployees"`
+		SalaryDetails    SalaryDetail      `json:"salarydetails"`
 	}
 
 	// TimesheetDetail/ActivityType for DB Model
@@ -397,8 +397,8 @@ type (
 		HourRateRent        float32        `json:"hourraterent"`
 		HourRateLabor       float32        `json:"hourratelabor"`
 		HourRateConsumable  float32        `json:"hourrateconsumable"`
-		WorkingHours        []*WorkingHour `json:"workinghours"`
-		Operations          []*Operation   `json:"operations"`
+		WorkingHours        WorkingHour    `json:"workinghours"`
+		Operations          Operation      `json:"operations"`
 	}
 
 	// Timesheets/TimesheetDetail for DB Model
@@ -414,8 +414,8 @@ type (
 		BillingHours  float32         `json:"billinghours"`
 		BillingAmount float32         `json:"billingamount"`
 		CostingAmount float32         `json:"costingamount"`
-		ActivityTypes []*ActivityType `json:"activitytypes"`
-		Workstations  []*Workstation  `json:"workstations"`
+		ActivityTypes ActivityType    `json:"activitytypes"`
+		Workstations  Workstation     `json:"workstations"`
 	}
 
 	// SalarySlip/Timesheet for DB Model
@@ -432,7 +432,7 @@ type (
 		PercentageBilled    float32            `json:"percentagebilled"`
 		TotalBilledAmount   float32            `json:"totalbilledamount"`
 		Note                string             `json:"note"`
-		TimesheetDetails    []*TimesheetDetail `json:"timesheetdetails"`
+		TimesheetDetails    TimesheetDetail    `json:"timesheetdetails"`
 	}
 
 	// Employees/SalarySlip for DB Model
@@ -451,7 +451,7 @@ type (
 		InterestAmount        float32       `json:"interestamount"`
 		RoundedTotal          int           `json:"roundedtotal"`
 		PostingDate           time.Time     `json:"bankaccount"`
-		Timesheets            []*Timesheet  `json:"users"`
+		Timesheets            Timesheet     `json:"timesheets"`
 	}
 
 	// Employees/SalarySlipTimesheet for DB Model
@@ -506,7 +506,7 @@ type (
 		ActualStartTime    time.Time        `json:"actualstarttime"`
 		ExpectedStartTime  time.Time        `json:"expectedstarttime"`
 		Status             string           `json:"status,omitempty"`
-		TaskDependent      []*TaskDependent `json:"taskdependents"`
+		TaskDependent      TaskDependent    `json:"taskdependents"`
 	}
 
 	// Projects/ProjectTask for DB Model
@@ -517,7 +517,7 @@ type (
 		EndDate     string        `json:"enddate"`
 		Title       string        `json:"title"`
 		Status      string        `json:"status,omitempty"`
-		Tasks       []*Task       `json:"tasks"`
+		Tasks       Task          `json:"tasks"`
 	}
 
 	// Employees/Project for DB Model
@@ -545,7 +545,7 @@ type (
 		PercentGrossMargin float32        `json:"percentgrossmargin"`
 		ActualStartTime    time.Time      `json:"actualstarttime"`
 		Status             string         `json:"status,omitempty"`
-		ProjectTasks       []*ProjectTask `json:"projecttasks"`
+		ProjectTasks       ProjectTask    `json:"projecttasks"`
 	}
 
 	// JournalEntry/JournalAccount for DB Model
@@ -587,7 +587,7 @@ type (
 		TotalAmount         float32           `json:"totalamount"`
 		WriteOffAmount      float32           `json:"writeoffamount"`
 		PostingDate         time.Time         `json:"postingdate"`
-		JournalAccounts     []*JournalAccount `json:"journalaccounts"`
+		JournalAccounts     JournalAccount    `json:"journalaccounts"`
 	}
 
 	// Users/Employee for DB Model
@@ -606,21 +606,21 @@ type (
 		Status                    string                 `json:"status,omitempty"`
 		BankName                  string                 `json:"bankname"`
 		BankAccount               int                    `json:"bankaccount"`
-		EmployeeContacts          []*EmployeeContact     `json:"empcontacts"`
-		Biodatas                  []*Biodata             `json:"biodatas"`
-		ExpenseClaims             []*ExpenseClaim        `json:"expenseclaims"`
-		LeaveAllocations          []*LeaveAllocation     `json:"leaveallocations"`
-		LeaveApplications         []*LeaveApplication    `json:"leaveapplications"`
-		LeaveBlockLists           []*LeaveBlockList      `json:"leaveblocklists"`
-		HolidayLists              []*HolidayList         `json:"holidaylists"`
-		Appraisals                []*Appraisal           `json:"appraisals"`
-		Exits                     []*Exit                `json:"exits"`
-		SalaryStructures          []*SalaryStructure     `json:"salarystructures"`
-		SalarySlips               []*SalarySlip          `json:"salaryslips"`
-		SalarySlipTimesheets      []*SalarySlipTimesheet `json:"salarysliptimesheets"`
-		ActivityCosts             []*ActivityCost        `json:"activitycosts"`
-		Projects                  []*Project             `json:"projects"`
-		JournalEntries            []*JournalEntry        `json:"journalentries"`
+		EmployeeContacts          EmployeeContact        `json:"empcontacts"`
+		Biodatas                  Biodata                `json:"biodatas"`
+		ExpenseClaims             ExpenseClaim           `json:"expenseclaims"`
+		LeaveAllocations          LeaveAllocation        `json:"leaveallocations"`
+		LeaveApplications         LeaveApplication       `json:"leaveapplications"`
+		LeaveBlockLists           LeaveBlockList         `json:"leaveblocklists"`
+		HolidayLists              HolidayList            `json:"holidaylists"`
+		Appraisals                Appraisal              `json:"appraisals"`
+		Exits                     Exit                   `json:"exits"`
+		SalaryStructures          SalaryStructure        `json:"salarystructures"`
+		SalarySlips               SalarySlip             `json:"salaryslips"`
+		SalarySlipTimesheets      SalarySlipTimesheet    `json:"salarysliptimesheets"`
+		ActivityCosts             ActivityCost           `json:"activitycosts"`
+		Projects                  Project                `json:"projects"`
+		JournalEntries            JournalEntry           `json:"journalentries"`
 	}
 
 	// Orgs/Users for DB Model
@@ -639,8 +639,8 @@ type (
 		Status            string        `json:"status,omitempty"`
 		CreatedAt         time.Time     `json:"createdat,omitempty"`
 		UpdatedAt         time.Time     `json:"updatedat,omitempty"`
-		Roles             []*Role       `json:"roles"`
-		Employees         []*Employee   `json:"employees"`
+		Roles             Role          `json:"roles"`
+		Employees         Employee      `json:"employees"`
 	}
 
 	// Orgs/Department for DB Model
@@ -740,15 +740,15 @@ type (
 		CreatedAt              time.Time           `json:"createdat,omitempty"`
 		UpdatedAt              time.Time           `json:"updatedat,omitempty"`
 		CompanyContacts        CompanyContact      `json:"compcontacts"`
-		Billings               []*Billing          `json:"billings"`
-		Users                  []*MgeUser          `json:"musers"`
-		Departments            []*Department       `json:"departments"`
-		Designations           []*Designation      `json:"designations"`
-		SalaryModes            []*SalaryMode       `json:"salarymodes"`
-		Branches               []*Branch           `json:"branches"`
-		LeaveTypes             []*LeaveType        `json:"leavetypes"`
-		ExpenseClaimTypes      []*ExpenseClaimType `json:"expenseclaimtypes"`
-		ProjectTypes           []*ProjectType      `json:"projecttypes"`
-		Accounts               []*Account          `json:"accounts"`
+		Billings               Billing             `json:"billings"`
+		Users                  MgeUser             `json:"musers"`
+		Departments            Department          `json:"departments"`
+		Designations           Designation         `json:"designations"`
+		SalaryModes            SalaryMode          `json:"salarymodes"`
+		Branches               Branch              `json:"branches"`
+		LeaveTypes             LeaveType           `json:"leavetypes"`
+		ExpenseClaimTypes      ExpenseClaimType    `json:"expenseclaimtypes"`
+		ProjectTypes           ProjectType         `json:"projecttypes"`
+		Accounts               Account             `json:"accounts"`
 	}
 )
