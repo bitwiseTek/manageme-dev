@@ -739,7 +739,7 @@ type (
 		Status                 string              `json:"status,omitempty"`
 		CreatedAt              time.Time           `json:"createdat,omitempty"`
 		UpdatedAt              time.Time           `json:"updatedat,omitempty"`
-		CompanyContacts        []*CompanyContact   `json:"compcontacts"`
+		CompanyContacts        CompanyContact      `json:"compcontacts"`
 		Billings               []*Billing          `json:"billings"`
 		Users                  []*MgeUser          `json:"musers"`
 		Departments            []*Department       `json:"departments"`

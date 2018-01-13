@@ -38,7 +38,7 @@ func (r *OrgRepository) AddOrgByUserID(userID string) (org models.Org, err error
 //AddOrgContact persists Org/Contact associated with a UserID
 func (r *OrgRepository) AddOrgContactByUserID(userID string) (org models.Org, err error) {
 	objID := bson.NewObjectId()
-	org.CompanyContact.ID = objID
+	org.CompanyContacts.ID = objID
 
 	err = r.C.Insert(&org)
 	return
@@ -47,8 +47,8 @@ func (r *OrgRepository) AddOrgContactByUserID(userID string) (org models.Org, er
 //AddOrgBilling persists Org/Billing associated with a UserID
 func (r *OrgRepository) AddOrgBillingByUserID(userID string) (org models.Org, err error) {
 	objID := bson.NewObjectId()
-	org.Billing.ID = objID
-	org.Billing.LastBilled = time.Now()
+	org.Billings.ID = objID
+	org.Billings.LastBilled = time.Now()
 
 	err = r.C.Insert(&org)
 	return
@@ -57,9 +57,9 @@ func (r *OrgRepository) AddOrgBillingByUserID(userID string) (org models.Org, er
 //AddOrgBillingTransaction persists Org/Billing/Transaction associated with a UserID
 func (r *OrgRepository) AddOrgBillingTransactionByUserID(userID string) (org models.Org, err error) {
 	objID := bson.NewObjectId()
-	org.Billing.Transactions.ID = objID
-	org.Billing.Transactions.CreatedAt = time.Now()
-	org.Billing.Transactions.Status = "Pending"
+	org.Billings.Transactions.ID = objID
+	org.Billings.Transactions.CreatedAt = time.Now()
+	org.Billings.Transactions.Status = "Pending"
 
 	err = r.C.Insert(&org)
 	return
@@ -74,7 +74,6 @@ func (r *OrgRepository) AddOrgUserByUserID(userID string) (org models.Org, err e
 		panic(err)
 	}
 	org.Users.HashPassword = hpass
-
 	org.Users.TempPassword = ""
 	org.Users.Status = "Active"
 	org.Users.CreatedAt = time.Now()
@@ -598,16 +597,36 @@ func (r *OrgRepository) GetOrgByUserID(userID string) (orgs models.Org, err erro
 	return
 }
 
-//GetOrgBillingsByUserID gets org/billings associated with a UserID
-func (r *OrgRepository) GetOrgBillingsByUserID(userID string) []models.Org {
-	var billings []models.Org
+//GetOrgTransactiosBillingByUserID gets org/billings/transactions associated with a UserID
+func (r *OrgRepository) GetOrgTransactionBillingsByUserID(userID string) []models.Org {
+	var orgs []models.Org
 	userid := bson.ObjectIdHex(userID)
 	iter := r.C.Find(bson.M{"userid": userid}).Iter()
 	result := models.Org{}
 	for iter.Next(&result) {
-		billings = append(billings, result)
+		billings := result.Billings
+		for iter.Next(&billings) {
+			for _, t := range billings.Transactions {
+				orgs = append(orgs, t)
+			}
+		}
 	}
-	return billings
+	return orgs
+}
+
+//GetOrgBillingsByUserID gets org/billings associated with a UserID
+func (r *OrgRepository) GetOrgBillingsByUserID(userID string) []models.Org {
+	var orgs []models.Org
+	userid := bson.ObjectIdHex(userID)
+	iter := r.C.Find(bson.M{"userid": userid}).Iter()
+	result := models.Org{}
+	for iter.Next(&result) {
+		billings := result.Billings
+		for _, b := range billings {
+			orgs = append(orgs, b)
+		}
+	}
+	return orgs
 }
 
 //GetOrgUsersByUserID gets org/users associated with a UserID
@@ -617,9 +636,9 @@ func (r *OrgRepository) GetOrgUsersByUserID(userID string) []models.Org {
 	iter := r.C.Find(bson.M{"userid": userid}).Iter()
 	result := models.Org{}
 	for iter.Next(&result) {
-		users := result.Users
-		for _, u := range users {
-			orgs = append(orgs, u)
+		musers := result.Users
+		for _, m := range musers {
+			orgs = append(orgs, m)
 		}
 	}
 	return orgs
