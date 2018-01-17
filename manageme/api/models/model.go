@@ -29,164 +29,130 @@ type (
 		UpdatedAt         time.Time     `json:"updatedat,omitempty"`
 	}
 
-	// Orgs/Contact for DB Model
-	CompanyContact struct {
-		ID          bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		CompanyName string        `json:"companyname"`
-		Address     string        `json:"address"`
-		State       string        `json:"state"`
-		Country     string        `json:"country"`
-		Logo        string        `json:"logo"`
-		PostalCode  string        `json:"postalcode"`
-		Phone       string        `json:"phone"`
-		Website     string        `json:"website"`
+	// Org Struct for DB Model
+	Org struct {
+		ID                     bson.ObjectId       `bson:"_id,omitempty" json:"id"`
+		UserID                 bson.ObjectId       `json:"userid"`
+		Name                   string              `json:"name"`
+		BusinessNature         string              `json:"businessnature"`
+		Modules                []string            `json:"modules"`
+		StaffStrength          string 			   `json:"staffstrength"`
+		FinancialYearStartDate string              `json:"financialyearstartdate"`
+		FinancialYearEndDate   string              `json:"financialyearenddate"`
+		RegistrationNo         string              `json:"registrationno"`
+		DefaultCurrency        string              `json:"defaultcurrency"`
+		CompanyName 		   string        	   `json:"companyname"`
+		Address     		   string              `json:"address"`
+		State       		   string        	   `json:"state"`
+		Country     		   string        	   `json:"country"`
+		Logo        		   string        	   `json:"logo"`
+		PostalCode  		   string        	   `json:"postalcode"`
+		Phone       		   string        	   `json:"phone"`
+		Website     		   string        	   `json:"website"`
+		Status                 string              `json:"status,omitempty"`
+		CreatedAt              time.Time           `json:"createdat,omitempty"`
+		UpdatedAt              time.Time           `json:"updatedat,omitempty"`
 	}
 
-	// Billings/Transaction for DB Model
-	Transaction struct {
-		ID            bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		RefCode       string        `json:"refcode"`
-		Type          string        `json:"type"`
-		Statement     string        `json:"statement"`
-		PaymentRef    string        `json:"paymentref"`
-		PaymentMethod string        `json:"paymentmethod"`
-		ResponseCode  string        `json:"responsecode"`
-		Status        string        `json:"status,omitempty"`
-		CreatedAt     time.Time     `json:"createdat,omitempty"`
-		UpdatedAt     time.Time     `json:"updatedat,omitempty"`
-	}
-
-	// Org/Billing for DB Model
-	Billing struct {
-		ID           bson.ObjectId  `bson:"_id,omitempty" json:"id"`
-		Name         string         `json:"name"`
-		Cost         float32        `json:"cost"`
-		Currency     string         `json:"currency"`
-		ActiveDays   time.Duration  `json:"activedays"`
-		MaxUsers     int            `json:"maxusers"`
-		LastBilled   time.Time      `json:"postalcode"`
-		Status       string         `json:"status"`
-		Transactions Transaction    `json:"transactions"`
-	}
-
-	// Roles/Permission for DB Model
+	// Permission Struct for DB Model
 	Permission struct {
 		ID    bson.ObjectId `bson:"_id,omitempty" json:"id"`
 		Name  string        `json:"name"`
 		Level string        `json:"level"`
 	}
 
-	// Users/Role for DB Model
+	// Role Struct for DB Model
 	Role struct {
 		ID            bson.ObjectId `bson:"_id,omitempty" json:"id"`
+		PermID        bson.ObjectId `json:"permid"`
 		Name          string        `json:"name"`
 		DocumentType  string        `json:"documenttype"`
 		DocumentStage string        `json:"documentstage"`
 		Status        string        `json:"status,omitempty"`
 		CreatedAt     time.Time     `json:"createdat,omitempty"`
 		UpdatedAt     time.Time     `json:"updatedat,omitempty"`
-		Permissions   Permission    `json:"permissions"`
 	}
 
-	// EmployeeContacts/EmergencyContact for DB Model
-	EmergencyContact struct {
+	// OrgUser Struct for DB Model
+	OrgUser struct {
 		ID                bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		FullName          string        `json:"firstname"`
-		Address           string        `json:"address"`
-		Email             string        `json:"email"`
-		RelationshipType  string        `json:"relationshiptype"`
-		AccommodationType string        `json:"accommodationtype"`
-		Phone             string        `json:"phone"`
+		OrgID             bson.ObjectId `json:"orgid"`
+		RoleID            bson.ObjectId `json:"roleid"`
+		Username          string        `json:"username"`
+		TempPassword      string        `json:"temppassword,omitempty"`
+		HashPassword      []byte        `json:"hashpassword,omitempty"`
+		LastLogin         time.Time     `json:"lastlogin"`
+		LastLoginLocation string        `json:"lastloginlocation"`
+		LastLoginIP       string        `json:"lastloginip"`
+		UserType          string        `json:"usertype"`
+		AllowedModules    []string      `json:"allowedmodules"`
+		SecurityQues      string        `json:"securityques"`
+		SecurityAns       string        `json:"securityans"`
+		Status            string        `json:"status,omitempty"`
+		CreatedAt         time.Time     `json:"createdat,omitempty"`
+		UpdatedAt         time.Time     `json:"updatedat,omitempty"`
 	}
 
-	// Employees/EmployeeContact for DB Model
-	EmployeeContact struct {
-		ID                bson.ObjectId       `bson:"_id,omitempty" json:"id"`
-		FirstName         string              `json:"firstname"`
-		LastName          string              `json:"lastname"`
-		MiddleName        string              `json:"middlename"`
-		AddressPermanent  string              `json:"addresspermanent"`
-		AddressCurrent    string              `json:"addresscurrent"`
-		EmailPersonal     string              `json:"emailpersonal"`
-		EmailCompany      string              `json:"emailcompany"`
-		Image             string              `json:"image"`
-		AccommodationType string              `json:"accommodationtype"`
-		PrimaryPhone      string              `json:"primaryphone"`
-		SecondaryPhone    string              `json:"secondaryphone"`
-		EmergencyContacts EmergencyContact    `json:"emrgcontacts"`
+	// Employee Struct for DB Model
+	Employee struct {
+		ID                        bson.ObjectId          `bson:"_id,omitempty" json:"id"`
+		DepartmentID              bson.ObjectId          `json:"departmentid"`
+		BranchID                  bson.ObjectId          `json:"branchid"`
+		OrgUserID                 bson.ObjectId          `json:"orguserid"`
+		ReportsTo                 bson.ObjectId          `json:"empid"`
+		EmployeeNo                string                 `json:"employeeno"`
+		JoiningDate               string                 `json:"joiningdate"`
+		EmploymentType            string                 `json:"employmenttype"`
+		ScheduledConfirmationDate string                 `json:"scheduledconfirmationdate"`
+		FinalConfirmationDate     string                 `json:"finalconfirmationdate"`
+		ContractEndDate           string                 `json:"contractenddate"`
+		RetirementDate            time.Time              `json:"retirementdate"`
+		Status                    string                 `json:"status,omitempty"`
+		BankName                  string                 `json:"bankname"`
+		BankAccount               int                    `json:"bankaccount"`
+		FirstName         		  string                 `json:"firstname"`
+		LastName          		  string                 `json:"lastname"`
+		MiddleName        		  string                 `json:"middlename"`
+		AddressPermanent  		  string                 `json:"addresspermanent"`
+		AddressCurrent    		  string                 `json:"addresscurrent"`
+		EmailPersonal     		  string                 `json:"emailpersonal"`
+		EmailCompany      		  string                 `json:"emailcompany"`
+		Image             		  string                 `json:"image"`
+		AccommodationType 		  string                 `json:"accommodationtype"`
+		PrimaryPhone      		  string                 `json:"primaryphone"`
+		SecondaryPhone    		  string                 `json:"secondaryphone"`
+		EmFullName          	  string        		 `json:"emfirstname"`
+		EmAddress				  string        		 `json:"emaddress"`
+		EmEmail             	  string        		 `json:"ememail"`
+		EmRelationshipType  	  string        		 `json:"emrelationshiptype"`
+		EmAccommodationType 	  string        		 `json:"emaccommodationtype"`
+		EmPhone             	  string        		 `json:"emphone"`
 	}
 
-	// Biodatas/PersonalIdentification for DB Model
-	PersonalIdentification struct {
-		ID         bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		IDType     string        `json:"idtype"`
-		IDNo       string        `json:"idno"`
-		VaidTill   string        `json:"validtill"`
-		IssuePlace string        `json:"issueplace"`
-		IssueDate  string        `json:"issuedate"`
+	// Account Struct for DB Model
+	Account struct {
+		ID              bson.ObjectId `bson:"_id,omitempty" json:"id"`
+		ParentAccount   bson.ObjectId `json:"accountid"`
+		OrgID        	bson.ObjectId `json:"orgid"`
+		Name            string        `json:"name"`
+		RootType        string        `json:"roottype"`
+		ReportType      string        `json:"reporttype"`
+		AccountCurrency string        `json:"accountcurrency"`
+		Type            string        `json:"type"`
+		TaxRate         float32       `json:"taxrate"`
+		BalanceType     string        `json:"balancetype"`
+		IsAccountFreeze bool          `json:"isaccountfreeze"`
+		IsGroup         bool          `json:"isgroup"`
+		CreatedAt       time.Time     `json:"createdat"`
+		UpdatedAt       time.Time     `json:"updatedat"`
+		Status          string        `json:"status,omitempty"`
 	}
 
-	// Biodatas/HealthDetails for DB Model
-	HealthDetail struct {
-		ID             bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		Height         string        `json:"height"`
-		Weight         string        `json:"weight"`
-		EyeColor       string        `json:"eyecolor"`
-		KnownAllergies string        `json:"knownallergies"`
-		HealthConcerns string        `json:"healthconcerns"`
-	}
-
-	// Biodatas/Education for DB Model
-	Education struct {
-		ID             bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		Qualification  string        `json:"qualification"`
-		CGPA           float32       `json:"cgpa"`
-		GraduatedOn    string        `json:"graduatedon"`
-		SchoolAttended string        `json:"schoolattended"`
-		HonorType      string        `json:"honortype"`
-	}
-
-	// Biodatas/WorkExperience for DB Model
-	WorkExperience struct {
-		ID             bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		CompanyWorked  string        `json:"companyworked"`
-		WorkHistoryExt time.Duration `json:"workhistoryext"`
-		Designation    string        `json:"designation"`
-		ResignedOn     string        `json:"resignedon"`
-		Address        string        `json:"address"`
-		Salary         string        `json:"salary"`
-	}
-
-	// Employees/Biodata for DB Model
-	Biodata struct {
-		ID                      bson.ObjectId             `bson:"_id,omitempty" json:"id"`
-		DateOfBirth             string                    `json:"dateofbirth"`
-		Sex                     string                    `json:"sex"`
-		BloodGroup              string                    `json:"bloodgroup"`
-		MaritalStatus           string                    `json:"maritalstatus"`
-		DisabilityType          string                    `json:"disabilitytype"`
-		Nationality             string                    `json:"nationality"`
-		StateOfOrigin           string                    `json:"stateoforigin"`
-		PersonalIdentifications PersonalIdentification    `json:"personalidentifications"`
-		HealthDetails           HealthDetail              `json:"healthdetails"`
-		Educations              Education                 `json:"educations"`
-		WorkExperiences         WorkExperience            `json:"workexperiences"`
-	}
-
-	// ExpenseClaims/ExpenseDetail for DB Model
-	ExpenseDetail struct {
-		ID               bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		ExpenseDate      string        `json:"expensedate"`
-		ExpenseType      string        `json:"expensetype"`
-		Description      string        `json:"description"`
-		ClaimAmount      float32       `json:"claimamount"`
-		SanctionedAmount float32       `json:"sanctionedamount"`
-	}
-
-	// Employees/ExpenseClaim for DB Model
+	// ExpenseClaim Struct for DB Model
 	ExpenseClaim struct {
 		ID                    bson.ObjectId    `bson:"_id,omitempty" json:"id"`
-		ExpApprover           bson.ObjectId    `json:"empid"`
+		ExpApprover           bson.ObjectId    `json:"mgrid"`
+		ExpApplier            bson.ObjectId    `json:"empid"`
 		ProjectID             bson.ObjectId    `json:"projectid"`
 		TaskID                bson.ObjectId    `json:"taskid"`
 		PayableAccount        bson.ObjectId    `json:"accountid"`
@@ -198,13 +164,19 @@ type (
 		PostingDate           time.Time        `json:"postingdate"`
 		PaymentMode           string           `json:"paymentmode"`
 		Status                string           `json:"status,omitempty"`
+		ExpenseDate      	  string           `json:"expensedate"`
+		ExpenseType      	  string           `json:"expensetype"`
+		Description      	  string           `json:"description"`
+		ClaimAmount      	  float32          `json:"claimamount"`
+		SanctionedAmount 	  float32          `json:"sanctionedamount"`
 		Remarks               string           `json:"remarks"`
-		ExpenseDetails        ExpenseDetail    `json:"expensedetails"`
 	}
 
-	// Employees/LeaveAllocation for DB Model
+	// LeaveAllocation Struct for DB Model
 	LeaveAllocation struct {
 		ID                   bson.ObjectId `bson:"_id,omitempty" json:"id"`
+		LeaveAllocator       bson.ObjectId `json:"mgrid"`
+		LeaveReceiver        bson.ObjectId `json:"empid"`
 		Description          string        `json:"description"`
 		LeaveType            string        `json:"leavetype"`
 		FromDate             string        `json:"fromdate"`
@@ -216,10 +188,11 @@ type (
 		AllocatedOn          time.Time     `json:"allocatedon,omitempty"`
 	}
 
-	// Employees/LeaveApplication for DB Model
+	// LeaveApplication Struct for DB Model
 	LeaveApplication struct {
 		ID             bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		LeaveApprover  bson.ObjectId `json:"empid"`
+		LeaveApprover  bson.ObjectId `json:"mgrid"`
+		LeaveApplier   bson.ObjectId `json:"empid"`
 		Description    string        `json:"description"`
 		LeaveType      string        `json:"leavetype"`
 		FromDate       string        `json:"fromdate"`
@@ -233,78 +206,50 @@ type (
 		UpdatedAt      time.Time     `json:"updatedat,omitempty"`
 	}
 
-	// LeaveBlockLists/BlockedDate for DB Model
-	BlockedDate struct {
-		ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		BlockDate string        `json:"blockdate"`
-		Reason    string        `json:"reason"`
-	}
-
-	// LeaveBlockLists/AllowedUser for DB Model
-	AllowedUser struct {
-		ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		AllowUser string        `json:"allowuser"`
-	}
-
-	// Employees/LeaveBlockList for DB Model
+	// LeaveBlockList Struct for DB Model
 	LeaveBlockList struct {
 		ID           bson.ObjectId  `bson:"_id,omitempty" json:"id"`
 		Name         string         `json:"name"`
+		BlockDate 	 string        	`json:"blockdate"`
+		Reason    	 string        	`json:"reason"`
 		ApplyAll     bool           `json:"applyall"`
-		BlockedDates BlockedDate    `json:"blockdates"`
-		AllowedUsers AllowedUser    `json:"allowedusers"`
+		AllowUser 	 string         `json:"allowuser"`
 	}
 
-	// HolidayLists/Holiday for DB Model
-	Holiday struct {
-		ID          bson.ObjectId `bson:"_id,omitempty" json:"id"`
+	// HolidayList Struct for DB Model
+	HolidayList struct {
+		ID        	bson.ObjectId `bson:"_id,omitempty" json:"id"`
+		Name      	string        `json:"name"`
+		FromDate  	string        `json:"fromdate"`
+		ToDate    	string        `json:"todate"`
+		WeeklyOff 	bool          `json:"weeklyoff"`
 		Description string        `json:"description"`
 		HolidayDate string        `json:"holidaydate"`
 	}
 
-	// Employees/HolidayList for DB Model
-	HolidayList struct {
-		ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		Name      string        `json:"name"`
-		FromDate  string        `json:"fromdate"`
-		ToDate    string        `json:"todate"`
-		WeeklyOff bool          `json:"weeklyoff"`
-		Holidays  Holiday       `json:"holidays"`
-	}
-
-	// Appraisals/AppraisalTemplate for DB Model
-	AppraisalTemplate struct {
-		ID          bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		Title       string        `json:"title"`
-		Description string        `json:"description"`
-	}
-
-	// Appraisals/AppraisalGoalfor DB Model
-	AppraisalGoal struct {
-		ID           bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		KRA          string        `json:"kra"`
-		PerWeightage float32       `json:"perweightage"`
-		Score        float32       `json:"score"`
-		ScoreEarned  float32       `json:"scoreearned"`
-	}
-
-	// Employees/Appraisal for DB Model
+	// Appraisal Struct for DB Model
 	Appraisal struct {
 		ID                 bson.ObjectId        `bson:"_id,omitempty" json:"id"`
 		ForEmployee        bson.ObjectId        `json:"empid"`
+		ApGenerator        bson.ObjectId        `json:"mgrid"`
 		StartDate          string               `json:"startdate"`
 		EndDate            string               `json:"enddate"`
 		Remarks            string               `json:"remarks"`
 		TotalScore         float32              `json:"totalscore"`
+		Title      	 	   string        		`json:"title"`
+		Description 	   string        		`json:"description"`
+		KRA          	   string        		`json:"kra"`
+		PerWeightage 	   float32       		`json:"perweightage"`
+		Score        	   float32       		`json:"score"`
+		ScoreEarned  	   float32       		`json:"scoreearned"`
 		Status             string               `json:"status,omitempty"`
 		AppraisedAt        time.Time            `json:"appraisedat,omitempty"`
-		AppraisalTemplates AppraisalTemplate    `json:"appraisaltemplates"`
-		AppraisalGoals     AppraisalGoal        `json:"appraisalgoals"`
 	}
 
-	// Employees/Exit for DB Model
+	// Exit Struct for DB Model
 	Exit struct {
 		ID                    bson.ObjectId `bson:"_id,omitempty" json:"id"`
+		ForEmployee        	  bson.ObjectId `json:"empid"`
 		ResignationLetterDate string        `json:"resignationletterdate"`
 		LeavingReason         string        `json:"leavingreason"`
 		RelievingDate         string        `json:"relievingdate"`
@@ -317,17 +262,79 @@ type (
 		ExitedAt              time.Time     `json:"exitedat,omitempty"`
 	}
 
-	// SalaryStructures/SalaryEmployee for DB Model
+	// Biodata Struct for DB Model
+	Biodata struct {
+		ID                      bson.ObjectId             `bson:"_id,omitempty" json:"id"`
+		EmployeeID              bson.ObjectId          	  `json:"empid"`
+		DateOfBirth             string                    `json:"dateofbirth"`
+		Sex                     string                    `json:"sex"`
+		BloodGroup              string                    `json:"bloodgroup"`
+		MaritalStatus           string                    `json:"maritalstatus"`
+		DisabilityType          string                    `json:"disabilitytype"`
+		Nationality             string                    `json:"nationality"`
+		StateOfOrigin           string                    `json:"stateoforigin"`
+	}
+
+	// PersonalIdentification Struct for DB Model
+	PersonalIdentification struct {
+		ID         	bson.ObjectId `bson:"_id,omitempty" json:"id"`
+		BioID      	bson.ObjectId `json:"bioid"`
+		Attachments	[]string	  `json:"attachments"`
+		IDType     	string        `json:"idtype"`
+		IDNo       	string        `json:"idno"`
+		VaidTill   	string        `json:"validtill"`
+		IssuePlace 	string        `json:"issueplace"`
+		IssueDate  	string        `json:"issuedate"`
+	}
+
+	// HealthDetail Struct for DB Model
+	HealthDetail struct {
+		ID             bson.ObjectId `bson:"_id,omitempty" json:"id"`
+		BioID      	   bson.ObjectId `json:"bioid"`
+		Attachments	   []string	  	 `json:"attachments"`
+		Height         string        `json:"height"`
+		Weight         string        `json:"weight"`
+		EyeColor       string        `json:"eyecolor"`
+		KnownAllergies string        `json:"knownallergies"`
+		HealthConcerns string        `json:"healthconcerns"`
+	}
+
+	// Education Struct for DB Model
+	Education struct {
+		ID             bson.ObjectId `bson:"_id,omitempty" json:"id"`
+		BioID      	   bson.ObjectId `json:"bioid"`
+		Attachments	   []string	  	 `json:"attachments"`
+		Qualification  string        `json:"qualification"`
+		CGPA           float32       `json:"cgpa"`
+		GraduatedOn    string        `json:"graduatedon"`
+		SchoolAttended string        `json:"schoolattended"`
+		HonorType      string        `json:"honortype"`
+	}
+
+	// WorkExperience Struct for DB Model
+	WorkExperience struct {
+		ID             bson.ObjectId `bson:"_id,omitempty" json:"id"`
+		BioID      	   bson.ObjectId `json:"bioid"`
+		Attachments	   []string	  	 `json:"attachments"`
+		CompanyWorked  string        `json:"companyworked"`
+		WorkHistoryExt time.Duration `json:"workhistoryext"`
+		Designation    string        `json:"designation"`
+		ResignedOn     string        `json:"resignedon"`
+		Address        string        `json:"address"`
+		Salary         string        `json:"salary"`
+	}
+
+	// SalaryEmployee Struct for DB Model
 	SalaryEmployee struct {
 		ID         bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		EmployeeNo string        `json:"employeeno"`
+		EmployeeID bson.ObjectId `json:"empid"`
 		FromDate   bool          `json:"fromdate"`
 		ToDate     bool          `json:"todate"`
 		Base       float32       `json:"base"`
 		Varaible   float32       `json:"variable"`
 	}
 
-	// SalaryDetails/SalaryComponent for DB Model
+	// SalaryComponent Struct for DB Model
 	SalaryComponent struct {
 		ID          bson.ObjectId `bson:"_id,omitempty" json:"id"`
 		Name        string        `json:"name"`
@@ -335,35 +342,29 @@ type (
 		Description string        `json:"description"`
 	}
 
-	// SalaryStructure/SalaryDetail for DB Model
-	SalaryDetail struct {
-		ID                   bson.ObjectId      `bson:"_id,omitempty" json:"id"`
-		IsAmountFormulaBased bool               `json:"isamountformulabased"`
-		IsAmountLwpBased     bool               `json:"isamountlwpbased"`
-		Amount               float32            `json:"amount"`
-		DefaulAmount         float32            `json:"defaultamount"`
-		SalaryComponents     SalaryComponent    `json:"salarycomponents"`
-	}
-
-	// Employees/SalaryStructure for DB Model
+	// SalaryStructure Struct for DB Model
 	SalaryStructure struct {
-		ID               bson.ObjectId     `bson:"_id,omitempty" json:"id"`
-		PayableAccount   bson.ObjectId     `json:"accountid"`
-		PayrollFrequency string            `json:"payrollfrequency"`
-		IsActive         bool              `json:"isactive"`
-		IsDefault        bool              `json:"isdefault"`
-		HourRate         float32           `json:"hourrate"`
-		PaymentMode      string            `json:"paymentmode"`
-		Deductions       float32           `json:"deductions"`
-		Earnings         float32           `json:"earnings"`
-		TotalDeductions  float32           `json:"totaldeductions"`
-		TotalEarnings    float32           `json:"totalearnings"`
-		NetPay           float32           `json:"netpay"`
-		SalaryEmployees  SalaryEmployee    `json:"salaryemployees"`
-		SalaryDetails    SalaryDetail      `json:"salarydetails"`
+		ID               		bson.ObjectId     `bson:"_id,omitempty" json:"id"`
+		PayableAccount   		bson.ObjectId     `json:"accountid"`
+		SalaryEmployeeID   		bson.ObjectId     `json:"salempid"`
+		SalaryComponentID    	bson.ObjectId     `json:"salcompid"`
+		PayrollFrequency 		string            `json:"payrollfrequency"`
+		IsActive         		bool              `json:"isactive"`
+		IsDefault        		bool              `json:"isdefault"`
+		HourRate         		float32           `json:"hourrate"`
+		PaymentMode      		string            `json:"paymentmode"`
+		Deductions       		float32           `json:"deductions"`
+		Earnings         		float32           `json:"earnings"`
+		TotalDeductions  		float32           `json:"totaldeductions"`
+		TotalEarnings    		float32           `json:"totalearnings"`
+		NetPay           		float32           `json:"netpay"`
+		IsAmountFormulaBased 	bool              `json:"isamountformulabased"`
+		IsAmountLwpBased     	bool              `json:"isamountlwpbased"`
+		Amount               	float32           `json:"amount"`
+		DefaulAmount         	float32           `json:"defaultamount"`
 	}
 
-	// TimesheetDetail/ActivityType for DB Model
+	// ActivityType Struct for DB Model
 	ActivityType struct {
 		ID          bson.ObjectId `bson:"_id,omitempty" json:"id"`
 		Name        string        `json:"name"`
@@ -372,7 +373,7 @@ type (
 		Disabled    bool          `json:"disabled"`
 	}
 
-	// Workstations/WorkingHours for DB Model
+	// WorkingHour Struct for DB Model
 	WorkingHour struct {
 		ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 		StartTime string        `json:"starttime"`
@@ -380,16 +381,17 @@ type (
 		Enabled   bool          `json:"enabled"`
 	}
 
-	// Workstation/Operation for DB Model
+	// Operation Struct for DB Model
 	Operation struct {
 		ID            bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		WorkstationID bson.ObjectId `json:"workstationid"`
 		Description   string        `json:"description"`
 	}
 
-	// TimesheetDetails/Workstation for DB Model
+	// Workstation Struct for DB Model
 	Workstation struct {
 		ID                  bson.ObjectId  `bson:"_id,omitempty" json:"id"`
+		OperationID 		bson.ObjectId  `json:"workstationid"`
+		WorkingHourID 		bson.ObjectId  `json:"workhourid"`
 		Name                string         `json:"name"`
 		Description         string         `json:"description"`
 		HourRate            float32        `json:"hourrate"`
@@ -397,33 +399,26 @@ type (
 		HourRateRent        float32        `json:"hourraterent"`
 		HourRateLabor       float32        `json:"hourratelabor"`
 		HourRateConsumable  float32        `json:"hourrateconsumable"`
-		WorkingHours        WorkingHour    `json:"workinghours"`
-		Operations          Operation      `json:"operations"`
 	}
 
-	// Timesheets/TimesheetDetail for DB Model
-	TimesheetDetail struct {
-		ID            bson.ObjectId   `bson:"_id,omitempty" json:"id"`
-		ProjectID     bson.ObjectId   `json:"projectid"`
-		TaskID        bson.ObjectId   `json:"taskid"`
-		FromTime      string          `json:"fromtime"`
-		ToTime        string          `json:"totime"`
-		CompletedQty  int             `json:"completedqty"`
-		Hours         float32         `json:"hours"`
-		Billable      float32         `json:"billable"`
-		BillingHours  float32         `json:"billinghours"`
-		BillingAmount float32         `json:"billingamount"`
-		CostingAmount float32         `json:"costingamount"`
-		ActivityTypes ActivityType    `json:"activitytypes"`
-		Workstations  Workstation     `json:"workstations"`
-	}
-
-	// SalarySlip/Timesheet for DB Model
+	// Timesheet Struct for DB Model
 	Timesheet struct {
 		ID                  bson.ObjectId      `bson:"_id,omitempty" json:"id"`
 		EmployeeID          bson.ObjectId      `json:"empid"`
+		ProjectID     		bson.ObjectId      `json:"projectid"`
+		TaskID        		bson.ObjectId      `json:"taskid"`
+		ActivityTypeID     	bson.ObjectId      `json:"activitytypeid"`
+		WorkStationID       bson.ObjectId      `json:"workstationid"`
 		StartDate           string             `json:"startdate"`
 		EndDate             string             `json:"enddate"`
+		FromTime      		string             `json:"fromtime"`
+		ToTime        		string             `json:"totime"`
+		CompletedQty  		int                `json:"completedqty"`
+		Hours         		float32            `json:"hours"`
+		Billable      		float32            `json:"billable"`
+		BillingHours  		float32            `json:"billinghours"`
+		BillingAmount 		float32            `json:"billingamount"`
+		CostingAmount 		float32            `json:"costingamount"`
 		TotalWorkingDays    int                `json:"totalworkingdays"`
 		TotalHours          float32            `json:"totalhours"`
 		TotalBillableHours  float32            `json:"totalbillablehours"`
@@ -432,16 +427,17 @@ type (
 		PercentageBilled    float32            `json:"percentagebilled"`
 		TotalBilledAmount   float32            `json:"totalbilledamount"`
 		Note                string             `json:"note"`
-		TimesheetDetails    TimesheetDetail    `json:"timesheetdetails"`
 	}
 
-	// Employees/SalarySlip for DB Model
+	// SalarySlip Struct for DB Model
 	SalarySlip struct {
 		ID                    bson.ObjectId `bson:"_id,omitempty" json:"id"`
 		DepartmentID          bson.ObjectId `json:"departmentid"`
 		BranchID              bson.ObjectId `json:"branchid"`
 		EmployeeID            bson.ObjectId `json:"empid"`
+		TimesheetID           bson.ObjectId `json:"timesheetid"`
 		IsSalarySlipTimesheet bool          `json:"issalarysliptimesheet"`
+		WorkingHours 		  float32       `json:"workinghours"`
 		StartDate             string        `json:"startdate"`
 		EndDate               string        `json:"enddate"`
 		LeaveWithoutPay       string        `json:"leavewithoutpay"`
@@ -451,17 +447,9 @@ type (
 		InterestAmount        float32       `json:"interestamount"`
 		RoundedTotal          int           `json:"roundedtotal"`
 		PostingDate           time.Time     `json:"bankaccount"`
-		Timesheets            Timesheet     `json:"timesheets"`
 	}
 
-	// Employees/SalarySlipTimesheet for DB Model
-	SalarySlipTimesheet struct {
-		ID           bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		TimesheetID  bson.ObjectId `json:"timesheetid"`
-		WorkingHours float32       `json:"workinghours"`
-	}
-
-	// Employees/ActivityCost for DB Model
+	// ActivityCost Struct for DB Model
 	ActivityCost struct {
 		ID           bson.ObjectId `bson:"_id,omitempty" json:"id"`
 		EmployeeID   bson.ObjectId `json:"empid"`
@@ -471,18 +459,111 @@ type (
 		Status       string        `json:"status,omitempty"`
 	}
 
-	// Tasks/TaskDependent for DB Model
-	TaskDependent struct {
-		ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		ProjectID bson.ObjectId `json:"projectid"`
-		TaskID    bson.ObjectId `json:"taskid"`
-		Subject   string        `json:"subject"`
+	// Billing Struct for DB Model
+	Billing struct {
+		ID           bson.ObjectId  `bson:"_id,omitempty" json:"id"`
+		OrgID        bson.ObjectId  `json:"orgid"`
+		Name         string         `json:"name"`
+		Cost         float32        `json:"cost"`
+		Currency     string         `json:"currency"`
+		BillingFreq  string 		`json:"billingfreq"`
+		ActiveDays   time.Duration  `json:"activedays"`
+		MaxUsers     int            `json:"maxusers"`
+		LastBilled   time.Time      `json:"postalcode"`
+		Status       string         `json:"status"`
 	}
 
-	// ProjectTasks/Task for DB Model
+	// Transaction Struct for DB Model
+	Transaction struct {
+		ID            bson.ObjectId `bson:"_id,omitempty" json:"id"`
+		BillingID 	  bson.ObjectId `json:"billingid"`
+		RefCode       string        `json:"refcode"`
+		Type          string        `json:"type"`
+		Statement     string        `json:"statement"`
+		PaymentRef    string        `json:"paymentref"`
+		PaymentMethod string        `json:"paymentmethod"`
+		ResponseCode  string        `json:"responsecode"`
+		Status        string        `json:"status,omitempty"`
+		CreatedAt     time.Time     `json:"createdat,omitempty"`
+		UpdatedAt     time.Time     `json:"updatedat,omitempty"`
+	}
+
+	// Department Struct for DB Model
+	Department struct {
+		ID          bson.ObjectId `bson:"_id,omitempty" json:"id"`
+		OrgID       bson.ObjectId `json:"orgid"`
+		Name        string        `json:"name"`
+		Description string        `json:"description"`
+		CreatedAt   time.Time     `json:"createdat"`
+		UpdatedAt   time.Time     `json:"updatedat"`
+		Status      string        `json:"status,omitempty"`
+	}
+
+	// Designation Struct for DB Model
+	Designation struct {
+		ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
+		OrgID     bson.ObjectId `json:"orgid"`
+		Name      string        `json:"name"`
+		CreatedAt time.Time     `json:"createdat"`
+		UpdatedAt time.Time     `json:"updatedat"`
+		Status    string        `json:"status,omitempty"`
+	}
+
+	// SalaryMode Struct for DB Model
+	SalaryMode struct {
+		ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
+		OrgID     bson.ObjectId `json:"orgid"`
+		Name      string        `json:"name"`
+		CreatedAt time.Time     `json:"createdat"`
+		UpdatedAt time.Time     `json:"updatedat"`
+		Status    string        `json:"status,omitempty"`
+	}
+
+	// Branch Struct for DB Model
+	Branch struct {
+		ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
+		OrgID     bson.ObjectId `json:"orgid"`
+		Name      string        `json:"name"`
+		CreatedAt time.Time     `json:"createdat"`
+		UpdatedAt time.Time     `json:"updatedat"`
+		Status    string        `json:"status,omitempty"`
+	}
+
+	// LeaveType Struct for DB Model
+	LeaveType struct {
+		ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
+		OrgID     bson.ObjectId `json:"orgid"`
+		Name      string        `json:"name"`
+		CreatedAt time.Time     `json:"createdat"`
+		UpdatedAt time.Time     `json:"updatedat"`
+		Status    string        `json:"status,omitempty"`
+	}
+
+	// ExpenseClaimType Struct for DB Model
+	ExpenseClaimType struct {
+		ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
+		OrgID     bson.ObjectId `json:"orgid"`
+		Name      string        `json:"name"`
+		CreatedAt time.Time     `json:"createdat"`
+		UpdatedAt time.Time     `json:"updatedat"`
+		Status    string        `json:"status,omitempty"`
+	}
+
+	// ProjectType Struct for DB Model
+	ProjectType struct {
+		ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
+		OrgID     bson.ObjectId `json:"orgid"`
+		Name      string        `json:"name"`
+		CreatedAt time.Time     `json:"createdat"`
+		UpdatedAt time.Time     `json:"updatedat"`
+		Status    string        `json:"status,omitempty"`
+	}
+
+	// Task Struct for DB Model
 	Task struct {
 		ID                 bson.ObjectId    `bson:"_id,omitempty" json:"id"`
 		ProjectID          bson.ObjectId    `json:"projectid"`
+		TaskDependent      bson.ObjectId    `json:"taskid"`
 		Name               string           `json:"name"`
 		Subject            string           `json:"subject"`
 		IsMilestone        bool             `json:"ismilestone"`
@@ -506,24 +587,24 @@ type (
 		ActualStartTime    time.Time        `json:"actualstarttime"`
 		ExpectedStartTime  time.Time        `json:"expectedstarttime"`
 		Status             string           `json:"status,omitempty"`
-		TaskDependent      TaskDependent    `json:"taskdependents"`
 	}
 
-	// Projects/ProjectTask for DB Model
+	// ProjectTask Struct for DB Model
 	ProjectTask struct {
 		ID          bson.ObjectId `bson:"_id,omitempty" json:"id"`
+		TaskID      bson.ObjectId `json:"taskid"`
 		Description string        `json:"description"`
 		StartDate   string        `json:"startdate"`
 		EndDate     string        `json:"enddate"`
 		Title       string        `json:"title"`
 		Status      string        `json:"status,omitempty"`
-		Tasks       Task          `json:"tasks"`
 	}
 
-	// Employees/Project for DB Model
+	// Project Struct for DB Model
 	Project struct {
 		ID                 bson.ObjectId  `bson:"_id,omitempty" json:"id"`
 		ProjectTypeID      bson.ObjectId  `json:"projecttypeid"`
+		ProjectTaskID      bson.ObjectId  `json:"projecttaskid"`
 		Name               string         `json:"name"`
 		IsActive           bool           `json:"isactive"`
 		PercentComplete    float32        `json:"percentcomplete"`
@@ -545,10 +626,9 @@ type (
 		PercentGrossMargin float32        `json:"percentgrossmargin"`
 		ActualStartTime    time.Time      `json:"actualstarttime"`
 		Status             string         `json:"status,omitempty"`
-		ProjectTasks       ProjectTask    `json:"projecttasks"`
 	}
 
-	// JournalEntry/JournalAccount for DB Model
+	// JournalAccount Struct for DB Model
 	JournalAccount struct {
 		ID                      bson.ObjectId `bson:"_id,omitempty" json:"id"`
 		AccountID               bson.ObjectId `json:"accountid"`
@@ -568,9 +648,10 @@ type (
 		IsAdvance               bool          `json:"isadvance"`
 	}
 
-	// Employees/JournalEntry for DB Model
+	// JournalEntry Struct for DB Model
 	JournalEntry struct {
 		ID                  bson.ObjectId     `bson:"_id,omitempty" json:"id"`
+		JournalAccountID           bson.ObjectId 	  `json:"journalaccountid"`
 		Title               string            `json:"title"`
 		VoucherType         float32           `json:"vouchertype"`
 		ChequeNo            string            `json:"chequeno"`
@@ -587,168 +668,5 @@ type (
 		TotalAmount         float32           `json:"totalamount"`
 		WriteOffAmount      float32           `json:"writeoffamount"`
 		PostingDate         time.Time         `json:"postingdate"`
-		JournalAccounts     JournalAccount    `json:"journalaccounts"`
-	}
-
-	// Users/Employee for DB Model
-	Employee struct {
-		ID                        bson.ObjectId          `bson:"_id,omitempty" json:"id"`
-		DepartmentID              bson.ObjectId          `json:"departmentid"`
-		BranchID                  bson.ObjectId          `json:"branchid"`
-		ReportsTo                 bson.ObjectId          `json:"empid"`
-		EmployeeNo                string                 `json:"employeeno"`
-		JoiningDate               string                 `json:"joiningdate"`
-		EmploymentType            string                 `json:"employmenttype"`
-		ScheduledConfirmationDate string                 `json:"scheduledconfirmationdate"`
-		FinalConfirmationDate     string                 `json:"finalconfirmationdate"`
-		ContractEndDate           string                 `json:"contractenddate"`
-		RetirementDate            time.Time              `json:"retirementdate"`
-		Status                    string                 `json:"status,omitempty"`
-		BankName                  string                 `json:"bankname"`
-		BankAccount               int                    `json:"bankaccount"`
-		EmployeeContacts          EmployeeContact        `json:"empcontacts"`
-		Biodatas                  Biodata                `json:"biodatas"`
-		ExpenseClaims             ExpenseClaim           `json:"expenseclaims"`
-		LeaveAllocations          LeaveAllocation        `json:"leaveallocations"`
-		LeaveApplications         LeaveApplication       `json:"leaveapplications"`
-		LeaveBlockLists           LeaveBlockList         `json:"leaveblocklists"`
-		HolidayLists              HolidayList            `json:"holidaylists"`
-		Appraisals                Appraisal              `json:"appraisals"`
-		Exits                     Exit                   `json:"exits"`
-		SalaryStructures          SalaryStructure        `json:"salarystructures"`
-		SalarySlips               SalarySlip             `json:"salaryslips"`
-		SalarySlipTimesheets      SalarySlipTimesheet    `json:"salarysliptimesheets"`
-		ActivityCosts             ActivityCost           `json:"activitycosts"`
-		Projects                  Project                `json:"projects"`
-		JournalEntries            JournalEntry           `json:"journalentries"`
-	}
-
-	// Orgs/Users for DB Model
-	MgeUser struct {
-		ID                bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		Username          string        `json:"username"`
-		TempPassword      string        `json:"temppassword,omitempty"`
-		HashPassword      []byte        `json:"hashpassword,omitempty"`
-		LastLogin         time.Time     `json:"lastlogin"`
-		LastLoginLocation string        `json:"lastloginlocation"`
-		LastLoginIP       string        `json:"lastloginip"`
-		UserType          string        `json:"usertype"`
-		AllowedModules    string        `json:"allowedmodules"`
-		SecurityQues      string        `json:"securityques"`
-		SecurityAns       string        `json:"securityans"`
-		Status            string        `json:"status,omitempty"`
-		CreatedAt         time.Time     `json:"createdat,omitempty"`
-		UpdatedAt         time.Time     `json:"updatedat,omitempty"`
-		Roles             Role          `json:"roles"`
-		Employees         Employee      `json:"employees"`
-	}
-
-	// Orgs/Department for DB Model
-	Department struct {
-		ID          bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		Name        string        `json:"name"`
-		Description string        `json:"description"`
-		CreatedAt   time.Time     `json:"createdat"`
-		UpdatedAt   time.Time     `json:"updatedat"`
-		Status      string        `json:"status,omitempty"`
-	}
-
-	// Orgs/Designation for DB Model
-	Designation struct {
-		ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		Name      string        `json:"name"`
-		CreatedAt time.Time     `json:"createdat"`
-		UpdatedAt time.Time     `json:"updatedat"`
-		Status    string        `json:"status,omitempty"`
-	}
-
-	// Orgs/SalaryMode for DB Model
-	SalaryMode struct {
-		ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		Name      string        `json:"name"`
-		CreatedAt time.Time     `json:"createdat"`
-		UpdatedAt time.Time     `json:"updatedat"`
-		Status    string        `json:"status,omitempty"`
-	}
-
-	// Orgs/Branch for DB Model
-	Branch struct {
-		ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		Name      string        `json:"name"`
-		CreatedAt time.Time     `json:"createdat"`
-		UpdatedAt time.Time     `json:"updatedat"`
-		Status    string        `json:"status,omitempty"`
-	}
-
-	// Orgs/LeaveType for DB Model
-	LeaveType struct {
-		ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		Name      string        `json:"name"`
-		CreatedAt time.Time     `json:"createdat"`
-		UpdatedAt time.Time     `json:"updatedat"`
-		Status    string        `json:"status,omitempty"`
-	}
-
-	// Orgs/ExpenseClaimType for DB Model
-	ExpenseClaimType struct {
-		ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		Name      string        `json:"name"`
-		CreatedAt time.Time     `json:"createdat"`
-		UpdatedAt time.Time     `json:"updatedat"`
-		Status    string        `json:"status,omitempty"`
-	}
-
-	// Orgs/ProjectType for DB Model
-	ProjectType struct {
-		ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		Name      string        `json:"name"`
-		CreatedAt time.Time     `json:"createdat"`
-		UpdatedAt time.Time     `json:"updatedat"`
-		Status    string        `json:"status,omitempty"`
-	}
-
-	// Orgs/Account for DB Model
-	Account struct {
-		ID              bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		ParentAccount   bson.ObjectId `json:"accountid"`
-		Name            string        `json:"name"`
-		RootType        string        `json:"roottype"`
-		ReportType      string        `json:"reporttype"`
-		AccountCurrency string        `json:"accountcurrency"`
-		Type            string        `json:"type"`
-		TaxRate         float32       `json:"taxrate"`
-		BalanceType     string        `json:"balancetype"`
-		IsAccountFreeze bool          `json:"isaccountfreeze"`
-		IsGroup         bool          `json:"isgroup"`
-		CreatedAt       time.Time     `json:"createdat"`
-		UpdatedAt       time.Time     `json:"updatedat"`
-		Status          string        `json:"status,omitempty"`
-	}
-
-	// Org Struct for DB Model
-	Org struct {
-		ID                     bson.ObjectId       `bson:"_id,omitempty" json:"id"`
-		UserID                 bson.ObjectId       `json:"userid"`
-		Name                   string              `json:"name"`
-		BusinessNature         string              `json:"businessnature"`
-		Modules                string              `json:"modules"`
-		FinancialYearStartDate string              `json:"financialyearstartdate"`
-		FinancialYearEndDate   string              `json:"financialyearenddate"`
-		RegistrationNo         string              `json:"registrationno"`
-		DefaultCurrency        string              `json:"defaultcurrency"`
-		Status                 string              `json:"status,omitempty"`
-		CreatedAt              time.Time           `json:"createdat,omitempty"`
-		UpdatedAt              time.Time           `json:"updatedat,omitempty"`
-		CompanyContacts        CompanyContact      `json:"compcontacts"`
-		Billings               Billing             `json:"billings"`
-		Users                  MgeUser             `json:"musers"`
-		Departments            Department          `json:"departments"`
-		Designations           Designation         `json:"designations"`
-		SalaryModes            SalaryMode          `json:"salarymodes"`
-		Branches               Branch              `json:"branches"`
-		LeaveTypes             LeaveType           `json:"leavetypes"`
-		ExpenseClaimTypes      ExpenseClaimType    `json:"expenseclaimtypes"`
-		ProjectTypes           ProjectType         `json:"projecttypes"`
-		Accounts               Account             `json:"accounts"`
 	}
 )
