@@ -69,7 +69,7 @@ type (
 	Role struct {
 		ID            bson.ObjectId `bson:"_id,omitempty" json:"id"`
 		OrgID         bson.ObjectId `json:"orgid"`
-		Permissions   []Permission 	`json:"permissions"`
+		Permissions   []Permission  `json:"permissions"`
 		Name          string        `json:"name"`
 		DocumentType  string        `json:"documenttype"`
 		DocumentStage string        `json:"documentstage"`
@@ -104,7 +104,7 @@ type (
 		DepartmentID              bson.ObjectId `json:"departmentid"`
 		BranchID                  bson.ObjectId `json:"branchid"`
 		OrgUserID                 bson.ObjectId `json:"orguserid"`
-		ReportsTo                 bson.ObjectId `json:"mgrid"`
+		ReportsTo                 bson.ObjectId `json:"mgrid,omitempty"`
 		EmployeeNo                string        `json:"employeeno"`
 		JoiningDate               string        `json:"joiningdate"`
 		EmploymentType            string        `json:"employmenttype"`
@@ -132,12 +132,14 @@ type (
 		EmRelationshipType        string        `json:"emrelationshiptype"`
 		EmAccommodationType       string        `json:"emaccommodationtype"`
 		EmPhone                   string        `json:"emphone"`
+		CreatedAt    	   		  time.Time     `json:"createdat"`
+		UpdatedAt    	   		  time.Time     `json:"updatedat"`
 	}
 
 	// Account Struct for DB Model
 	Account struct {
 		ID              bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		ParentAccount   bson.ObjectId `json:"accountid"`
+		ParentAccount   bson.ObjectId `json:"accountid,omitempty"`
 		OrgID           bson.ObjectId `json:"orgid"`
 		Name            string        `json:"name"`
 		RootType        string        `json:"roottype"`
@@ -156,7 +158,7 @@ type (
 	// ExpenseClaim Struct for DB Model
 	ExpenseClaim struct {
 		ID                    bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		OrgID           	  bson.ObjectId `json:"orgid"`
+		OrgID                 bson.ObjectId `json:"orgid"`
 		ExpenseType           bson.ObjectId `json:"exptypeid"`
 		ExpApprover           bson.ObjectId `json:"mgrid"`
 		ExpApplier            bson.ObjectId `json:"empid"`
@@ -176,12 +178,14 @@ type (
 		ClaimAmount           float32       `json:"claimamount"`
 		SanctionedAmount      float32       `json:"sanctionedamount"`
 		Remarks               string        `json:"remarks"`
+		CreatedAt    	      time.Time     `json:"createdat"`
+		UpdatedAt    	      time.Time     `json:"updatedat"`
 	}
 
 	// LeaveAllocation Struct for DB Model
 	LeaveAllocation struct {
 		ID                   bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		OrgID           	 bson.ObjectId `json:"orgid"`
+		OrgID                bson.ObjectId `json:"orgid"`
 		LeaveType            bson.ObjectId `json:"leavetypeid"`
 		LeaveAllocator       bson.ObjectId `json:"mgrid"`
 		LeaveReceiver        bson.ObjectId `json:"empid"`
@@ -193,6 +197,8 @@ type (
 		CarryForwardedLeaves int           `json:"carryforwardedleaves"`
 		TotalLeavesAllocated int           `json:"totalleavesallocated"`
 		AllocatedOn          time.Time     `json:"allocatedon,omitempty"`
+		CreatedAt    	     time.Time     `json:"createdat"`
+		UpdatedAt    	     time.Time     `json:"updatedat"`
 	}
 
 	// LeaveApplication Struct for DB Model
@@ -260,7 +266,7 @@ type (
 	// Exit Struct for DB Model
 	Exit struct {
 		ID                    bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		OrgID           	  bson.ObjectId `json:"orgid"`
+		OrgID                 bson.ObjectId `json:"orgid"`
 		ForEmployee           bson.ObjectId `json:"empid"`
 		OverseenBy            bson.ObjectId `json:"mgrid"`
 		ResignationLetterDate string        `json:"resignationletterdate"`
@@ -341,7 +347,7 @@ type (
 	SalaryEmployee struct {
 		ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 		OrgID     bson.ObjectId `json:"orgid"`
-		Employees []Employee    `json:"employees"`
+		Employees []Employee   `json:"employees"`
 		FromDate  bool          `json:"fromdate"`
 		ToDate    bool          `json:"todate"`
 		Base      float32       `json:"base"`
@@ -360,7 +366,7 @@ type (
 	// SalaryStructure Struct for DB Model
 	SalaryStructure struct {
 		ID                   bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		OrgID           	 bson.ObjectId `json:"orgid"`
+		OrgID                bson.ObjectId `json:"orgid"`
 		PayableAccount       bson.ObjectId `json:"accountid"`
 		GeneratedBy          bson.ObjectId `json:"mgrid"`
 		SalaryEmployeeID     bson.ObjectId `json:"salempid"`
@@ -379,6 +385,8 @@ type (
 		IsAmountLwpBased     bool          `json:"isamountlwpbased"`
 		Amount               float32       `json:"amount"`
 		DefaulAmount         float32       `json:"defaultamount"`
+		CreatedAt    	     time.Time     `json:"createdat"`
+		UpdatedAt    	     time.Time     `json:"updatedat"`
 	}
 
 	// ActivityType Struct for DB Model
@@ -389,12 +397,14 @@ type (
 		BillingRate float32       `json:"billingrate"`
 		CostingRate float32       `json:"costingrate"`
 		Disabled    bool          `json:"disabled"`
+		CreatedAt   time.Time     `json:"createdat"`
+		UpdatedAt   time.Time     `json:"updatedat"`
 	}
 
 	// WorkingHour Struct for DB Model
 	WorkingHour struct {
 		ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		OrgID       bson.ObjectId `json:"orgid"`
+		OrgID     bson.ObjectId `json:"orgid"`
 		StartTime string        `json:"starttime"`
 		EndTime   string        `json:"endtime"`
 		Enabled   bool          `json:"enabled"`
@@ -412,7 +422,7 @@ type (
 		ID                  bson.ObjectId `bson:"_id,omitempty" json:"id"`
 		OperationID         bson.ObjectId `json:"workstationid"`
 		WorkingHourID       bson.ObjectId `json:"workhourid"`
-		OrgID       		bson.ObjectId `json:"orgid"`
+		OrgID               bson.ObjectId `json:"orgid"`
 		Name                string        `json:"name"`
 		Description         string        `json:"description"`
 		HourRate            float32       `json:"hourrate"`
@@ -428,7 +438,7 @@ type (
 		OrgID               bson.ObjectId `json:"orgid"`
 		ForEmployee         bson.ObjectId `json:"empid"`
 		ApprovedBy          bson.ObjectId `json:"mgrid"`
-		ProjectID           bson.ObjectId `json:"projectid"`
+		ProjectID           bson.ObjectId `json:"projectid,omitempty"`
 		ActivityTypeID      bson.ObjectId `json:"activitytypeid"`
 		WorkStationID       bson.ObjectId `json:"workstationid"`
 		StartDate           string        `json:"startdate"`
@@ -449,12 +459,14 @@ type (
 		PercentageBilled    float32       `json:"percentagebilled"`
 		TotalBilledAmount   float32       `json:"totalbilledamount"`
 		Note                string        `json:"note"`
+		CreatedAt    	    time.Time     `json:"createdat"`
+		UpdatedAt    	    time.Time     `json:"updatedat"`
 	}
 
 	// SalarySlip Struct for DB Model
 	SalarySlip struct {
 		ID                    bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		OrgID           	  bson.ObjectId `json:"orgid"`
+		OrgID                 bson.ObjectId `json:"orgid"`
 		DepartmentID          bson.ObjectId `json:"departmentid"`
 		BranchID              bson.ObjectId `json:"branchid"`
 		ForEmployee           bson.ObjectId `json:"empid"`
@@ -471,6 +483,8 @@ type (
 		InterestAmount        float32       `json:"interestamount"`
 		RoundedTotal          int           `json:"roundedtotal"`
 		PostingDate           time.Time     `json:"bankaccount"`
+		CreatedAt    	   	  time.Time     `json:"createdat"`
+		UpdatedAt    	   	  time.Time     `json:"updatedat"`
 	}
 
 	// ActivityCost Struct for DB Model
@@ -481,6 +495,8 @@ type (
 		ActivityType bson.ObjectId `json:"activitytypeid"`
 		BillingRate  float32       `json:"billingrate"`
 		CostingRate  float32       `json:"costingrate"`
+		CreatedAt    time.Time     `json:"createdat"`
+		UpdatedAt	 time.Time     `json:"updatedat"`
 		Status       string        `json:"status,omitempty"`
 	}
 
@@ -495,6 +511,7 @@ type (
 		ActiveDays  time.Duration `json:"activedays"`
 		MaxUsers    int           `json:"maxusers"`
 		LastBilled  time.Time     `json:"postalcode"`
+		UpdatedAt   time.Time     `json:"updatedat"`
 		Status      string        `json:"status"`
 	}
 
@@ -588,7 +605,7 @@ type (
 	Task struct {
 		ID                 bson.ObjectId `bson:"_id,omitempty" json:"id"`
 		OrgID              bson.ObjectId `json:"orgid"`
-		TaskDependent      bson.ObjectId `json:"taskid"`
+		TaskDependent      bson.ObjectId `json:"taskid,omitempty"`
 		InitiatedBy        bson.ObjectId `json:"empid"`
 		Name               string        `json:"name"`
 		Subject            string        `json:"subject"`
@@ -612,6 +629,8 @@ type (
 		PercentComplete    float32       `json:"percentcomplete"`
 		ActualStartTime    time.Time     `json:"actualstarttime"`
 		ExpectedStartTime  time.Time     `json:"expectedstarttime"`
+		CreatedAt    	   time.Time     `json:"createdat"`
+		UpdatedAt    	   time.Time     `json:"updatedat"`
 		Status             string        `json:"status,omitempty"`
 	}
 
@@ -631,7 +650,7 @@ type (
 	Project struct {
 		ID                 bson.ObjectId `bson:"_id,omitempty" json:"id"`
 		OrgID              bson.ObjectId `json:"orgid"`
-		Manager       	   bson.ObjectId `json:"empid"`
+		Manager            bson.ObjectId `json:"empid"`
 		ProjectTypeID      bson.ObjectId `json:"projecttypeid"`
 		ProjectTaskID      bson.ObjectId `json:"projecttaskid"`
 		Name               string        `json:"name"`
@@ -654,6 +673,8 @@ type (
 		GrossMargin        float32       `json:"grossmargin"`
 		PercentGrossMargin float32       `json:"percentgrossmargin"`
 		ActualStartTime    time.Time     `json:"actualstarttime"`
+		CreatedAt    	   time.Time     `json:"createdat"`
+		UpdatedAt    	   time.Time     `json:"updatedat"`
 		Status             string        `json:"status,omitempty"`
 	}
 
@@ -676,6 +697,8 @@ type (
 		Credit                  float32       `json:"credit"`
 		ExchangeRate            float32       `json:"exchangerate"`
 		IsAdvance               bool          `json:"isadvance"`
+		CreatedAt    	        time.Time     `json:"createdat"`
+		UpdatedAt    	        time.Time     `json:"updatedat"`
 	}
 
 	// JournalEntry Struct for DB Model
@@ -699,5 +722,7 @@ type (
 		TotalAmount         float32       `json:"totalamount"`
 		WriteOffAmount      float32       `json:"writeoffamount"`
 		PostingDate         time.Time     `json:"postingdate"`
+		CreatedAt    	    time.Time     `json:"createdat"`
+		UpdatedAt    	    time.Time     `json:"updatedat"`
 	}
 )

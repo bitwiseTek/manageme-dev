@@ -69,3 +69,49 @@ func (r *OrgUserRepository) GetUsersByOrgID(orgID string) []models.OrgUser {
 	}
 	return users
 }
+
+func (r *OrgUserRepository) DeleteOrgUserById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
+}
+
+//EditOrgUserByID edits org user associated with an ID
+func (r *OrgUserRepository) EditOrgUserByID(user *models.OrgUser) error {
+	err := r.C.Update(bson.M{"_id": user.ID},
+		bson.M{"$set": bson.M{
+			"roleid":       user.RoleID,
+			"username":     user.Username,
+			"temppassword": user.TempPassword,
+			"usertype":     user.UserType,
+			"status":       user.Status,
+			"updatedat":    time.Now(),
+		}})
+	return err
+}
+
+//EditOrgUserByOrgUserID edits org user associated with an ID
+func (r *OrgUserRepository) EditOrgUserByOrgUserID(user *models.OrgUser) error {
+	err := r.C.Update(bson.M{"_id": user.ID},
+		bson.M{"$set": bson.M{
+			"temppassword": user.TempPassword,
+			"securityques": user.SecurityQues,
+			"securityans":  user.SecurityAns,
+			"updatedat":    time.Now(),
+		}})
+	return err
+}
+
+//OrgUserSignIn logs org users into the system
+func (r *OrgUserRepository) SignIn(user *models.OrgUser) (u models.OrgUser, err error) {
+	err = r.C.Find(bson.M{"username": user.Username}).One(&u)
+	if err != nil {
+		return
+	}
+
+	err = bcrypt.CompareHashAndPassword(u.HashPassword, []byte(user.TempPassword))
+	if err != nil {
+		u = models.OrgUser{}
+		u.LastLogin = time.Now()
+	}
+	return
+}

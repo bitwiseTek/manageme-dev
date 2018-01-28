@@ -21,7 +21,7 @@ type RoleRepository struct {
 }
 
 //AddRole persists Role associated with PermID
-func (r *RoleRepository) AddRoleByOrgID(OrgID string) (role models.Role, err error) {
+func (r *RoleRepository) AddRoleByOrgID(orgID string) (role models.Role, err error) {
 	objID := bson.NewObjectId()
 	role.ID = objID
 	role.OrgID = bson.ObjectIdHex(orgID)
@@ -58,11 +58,30 @@ func (r *RoleRepository) GetRolesByOrgID(orgID string) []models.Role {
 	result := models.Role{}
 	for iter.Next(&result) {
 		permissions := result.Permissions
-		for _, p = range permissions {
-			roles = append(p, result)
+		for _, p := range permissions {
+			p = append(p, result)
 		}
 	}
 	return roles
+}
+
+//EditRoleByID edits role associated with an ID
+func (r *RoleRepository) EditRoleByID(role *models.Role) error {
+	err := r.C.Update(bson.M{"_id": role.ID},
+		bson.M{"$set": bson.M{
+			"name":          role.Name,
+			"documenttype":  role.DocumentType,
+			"documentstage": role.DocumentStage,
+			"status":        role.Status,
+			"updatedat":     time.Now(),
+		}})
+	return err
+}
+
+//DeleteRoleById deletes role out of the system by Id
+func (r *RoleRepository) DeleteRoleById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
 }
 
 //AddPermissionByOrgID persists Permission associated with OrgID
@@ -100,9 +119,27 @@ func (r *RoleRepository) GetPermissionsByOrgID(orgID string) []models.Permission
 	var perms []models.Permission
 	orgid := bson.ObjectIdHex(orgID)
 	iter := r.C.Find(bson.M{"orgid": orgid}).Iter()
-	result := models.Permissioin{}
+	result := models.Permission{}
 	for iter.Next(&result) {
-		perms = append(p, result)
+		perms = append(perms, result)
 	}
 	return perms
+}
+
+//EditPermissionByID edits permission associated with an ID
+func (r *RoleRepository) EditPermissionByID(perm *models.Permission) error {
+	err := r.C.Update(bson.M{"_id": perm.ID},
+		bson.M{"$set": bson.M{
+			"name":      perm.Name,
+			"level":     perm.Level,
+			"status":    perm.Status,
+			"updatedat": time.Now(),
+		}})
+	return err
+}
+
+//DeletePermissionById deletes permission out of the system by Id
+func (r *RoleRepository) DeletePermissionById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
 }

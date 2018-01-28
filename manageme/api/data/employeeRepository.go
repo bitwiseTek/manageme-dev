@@ -112,6 +112,88 @@ func (r *EmployeeRepository) GetEmpsByMgrID(mgrID string) []models.Employee {
 	return emps
 }
 
+//EditEmpByID edits emp associated with an ID
+func (r *EmployeeRepository) EditEmpByID(emp *models.Employee) error {
+	err := r.C.Update(bson.M{"_id": emp.ID},
+		bson.M{"$set": bson.M{
+			"joiningdate": 					emp.JoiningDate,
+			"employmenttype":  	 			emp.EmploymentType,
+			"scheduledconfirmationdate":    emp.ScheduledConfirmationDate,
+			"finalconfirmationdate":	  	emp.FinalConfirmationDate,
+			"contractenddate":				emp.ContractEndDate,
+			"retirementdate":				emp.RetirementDate,
+			"status":				  		emp.Status,
+			"bankname":			  			emp.BankName,
+			"bankaccount":				  	emp.BankAccount,
+			"firstname":				  	emp.FirstName,
+			"lastname":				  		emp.LastName,
+			"middlename":				  	emp.MiddleName,
+			"addresspermanent":			 	emp.AddressPermanent,
+			"addresscurrent":				emp.AddressCurrent,
+			"emailpersonal":				emp.EmailPersonal,
+			"emailcompany":				  	emp.EmailCompany,
+			"image":				  		emp.Image,
+			"accommodationtype":		  	emp.AccommodationType,
+			"primaryphone":				  	emp.PrimaryPhone,
+			"secondaryphone":				emp.SecondaryPhone,
+			"emfullname":				  	emp.EmFullName,
+			"emaddress":				  	emp.EmAddress,
+			"ememail":				  		emp.EmEmail,
+			"emrelationshiptype":		  	emp.EmRelationshipType,
+			"emaccommodationtype":		  	emp.EmAccommodationType,
+			"emphone":				  		emp.EmPhone,
+			"updatedat":              		time.Now(),
+		}})
+	return err
+}
+
+//DeleteEmpById deletes emp out of the system by Id
+func (r *EmployeeRepository) DeleteByEmpById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
+}
+
+//EditEmpByUserID edits emp associated with a UserID
+func (r *EmployeeRepository) EditEmpByUserID(emp *models.Employee) error {
+	err := r.C.Update(bson.M{"userid": emp.UserID},
+		bson.M{"$set": bson.M{
+			"joiningdate": 					emp.JoiningDate,
+			"employmenttype":  	 			emp.EmploymentType,
+			"scheduledconfirmationdate":    emp.ScheduledConfirmationDate,
+			"finalconfirmationdate":	  	emp.FinalConfirmationDate,
+			"contractenddate":				emp.ContractEndDate,
+			"retirementdate":				emp.RetirementDate,
+			"status":				  		emp.Status,
+			"bankname":			  			emp.BankName,
+			"bankaccount":				  	emp.BankAccount,
+			"firstname":				  	emp.FirstName,
+			"lastname":				  		emp.LastName,
+			"middlename":				  	emp.MiddleName,
+			"addresspermanent":			 	emp.AddressPermanent,
+			"addresscurrent":				emp.AddressCurrent,
+			"emailpersonal":				emp.EmailPersonal,
+			"emailcompany":				  	emp.EmailCompany,
+			"image":				  		emp.Image,
+			"accommodationtype":		  	emp.AccommodationType,
+			"primaryphone":				  	emp.PrimaryPhone,
+			"secondaryphone":				emp.SecondaryPhone,
+			"emfullname":				  	emp.EmFullName,
+			"emaddress":				  	emp.EmAddress,
+			"ememail":				  		emp.EmEmail,
+			"emrelationshiptype":		  	emp.EmRelationshipType,
+			"emaccommodationtype":		  	emp.EmAccommodationType,
+			"emphone":				  		emp.EmPhone,
+			"updatedat":              		time.Now(),
+		}})
+	return err
+}
+
+//DeleteEmpByUserId deletes emp out of the system by a UserId
+func (r *EmployeeRepository) DeleteByEmpByUserId(id string) error {
+	err := r.C.Remove(bson.M{"userid": bson.ObjectIdHex(id)})
+	return err
+}
+
 //AddBiodata persists Biodata associated with EmpID
 func (r *EmployeeRepository) AddBiodataByEmpID(empID string) (bio models.Biodata, err error) {
 	objID := bson.NewObjectId()
@@ -181,9 +263,57 @@ func (r *EmployeeRepository) GetBiosByEmpID(empID string) []models.Biodata {
 	return bios
 }
 
+//EditBioByEmpID edits bio associated with an EmpID
+func (r *EmployeeRepository) EditBiodataByEmpID(bio *models.Biodata) error {
+	err := r.C.Update(bson.M{"empid": bio.EmpID},
+		bson.M{"$set": bson.M{
+			"dateofbirth": 			bio.DateOfBirth,
+			"sex":  	 			bio.Sex,
+			"bloodgroup":    		bio.BloodGroup,
+			"maritalstatus":	  	bio.MaritalStatus,
+			"disabilitytype":		bio.DisabilityType,
+			"nationality":			bio.Nationality,
+			"stateoforigin":  		bio.StateOfOrigin,
+		}})
+	return err
+}
+
+//DeleteBioByEmpId deletes biodata out of the system by EmpId
+func (r *EmployeeRepository) DeleteBiodataByEmpId(id string) error {
+	err := r.C.Remove(bson.M{"empid": bson.ObjectIdHex(id)})
+	return err
+}
+
+//EditBioByID edits bio associated with an ID
+func (r *EmployeeRepository) EditBiodataByID(bio *models.Biodata) error {
+	err := r.C.Update(bson.M{"_id": bio.ID},
+		bson.M{"$set": bson.M{
+			"dateofbirth": 			bio.DateOfBirth,
+			"sex":  	 			bio.Sex,
+			"bloodgroup":    		bio.BloodGroup,
+			"maritalstatus":	  	bio.MaritalStatus,
+			"disabilitytype":		bio.DisabilityType,
+			"nationality":			bio.Nationality,
+			"stateoforigin":  		bio.StateOfOrigin,
+		}})
+	return err
+}
+
+//DeleteBioById deletes biodata out of the system by Id
+func (r *EmployeeRepository) DeleteBiodataById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
+}
+
 //GetPIDByID gets personal ID associated with an ID
 func (r *EmployeeRepository) GetPIDByID(id string) (pid models.PersonalIdentification, err error) {
 	err = r.C.Find(bson.ObjectIdHex(id)).One(&pid)
+	return
+}
+
+//GetPIDByBioID gets personal ID associated with a BioID
+func (r *EmployeeRepository) GetPIDByBioID(bioID string) (pid models.PersonalIdentification, err error) {
+	err = r.C.Find(bson.ObjectIdHex(bioID)).One(&pid)
 	return
 }
 
@@ -199,9 +329,29 @@ func (r *EmployeeRepository) GetPIDssByBioID(bioID string) []models.PersonalIden
 	return pids
 }
 
+//EditPIDByBioID edits PID associated with a BioID
+func (r *EmployeeRepository) EditPIDByBioID(pid *models.PID) error {
+	err := r.C.Update(bson.M{"bioid": pid.BioID},
+		bson.M{"$set": bson.M{
+			"attachments": 			pid.Attachments,
+			"idtype":  	 			pid.IdType,
+			"idno":    				pid.IdNo,
+			"validtill":	  		pid.ValidTill,
+			"issueplace":			pid.IssuePlace,
+			"issuedate":			pid.IssueDate,
+		}})
+	return err
+}
+
 //GetEduByID gets edu associated with an ID
 func (r *EmployeeRepository) GetEduByID(id string) (edu models.Education, err error) {
 	err = r.C.Find(bson.ObjectIdHex(id)).One(&edu)
+	return
+}
+
+//GetEduByBioID gets edu associated with a BioID
+func (r *EmployeeRepository) GetEduByBioID(bioID string) (edu models.Education, err error) {
+	err = r.C.Find(bson.ObjectIdHex(bioID)).One(&edu)
 	return
 }
 
@@ -217,7 +367,21 @@ func (r *EmployeeRepository) GetEdusByBioID(bioID string) []models.Education {
 	return edus
 }
 
-//GetWorkByID gets work exoperience associated with an ID
+//EditEduByBioID edits Edu associated with a BioID
+func (r *EmployeeRepository) EditEduByBioID(edu *models.Education) error {
+	err := r.C.Update(bson.M{"bioid": edu.BioID},
+		bson.M{"$set": bson.M{
+			"attachments": 			edu.Attachments,
+			"qualification":  	 	edu.Qualification,
+			"cgpa":    				edu.CGPA,
+			"graduatedon":	  		edu.GraduatedOn,
+			"schoolattended":		edu.SchoolAttended,
+			"honortype":			edu.HonorType,
+		}})
+	return err
+}
+
+//GetWorkByID gets work experience associated with an ID
 func (r *EmployeeRepository) GetWorkByID(id string) (work models.WorkExperience, err error) {
 	err = r.C.Find(bson.ObjectIdHex(id)).One(&work)
 	return
@@ -235,8 +399,68 @@ func (r *EmployeeRepository) GetWorksByBioID(bioID string) []models.WorkExperien
 	return works
 }
 
+//GetWorkByBioID gets work experience associated with a BioID
+func (r *EmployeeRepository) GetWorkByBioID(bioID string) (work models.WorkExperience, err error) {
+	err = r.C.Find(bson.ObjectIdHex(bioID)).One(&work)
+	return
+}
+
+//EditWorkByBioID edits work associated with a BioID
+func (r *EmployeeRepository) EditWorkByBioID(work *models.WorkExperience) error {
+	err := r.C.Update(bson.M{"bioid": work.BioID},
+		bson.M{"$set": bson.M{
+			"attachments": 			work.Attachments,
+			"companyworked":  	 	work.CompanyWorked,
+			"workhistoryext":    	work.WorkHistoryExt,
+			"designation":	  		work.Designation,
+			"resignedon":			work.ResignedOn,
+			"address":				work.Address,
+			"salary":				work.Salary,
+		}})
+	return err
+}
+
+//GetHealthByID gets health detail associated with an ID
+func (r *EmployeeRepository) GetHealthDetailByID(id string) (health models.HealthDetail, err error) {
+	err = r.C.Find(bson.ObjectIdHex(id)).One(&health)
+	return
+}
+
+//GetWHealthByBioID gets health detail associated with a BioID
+func (r *EmployeeRepository) GetHealthDetailsByBioID(bioID string) []models.HealthDetail {
+	var healths []models.HealthDetail
+	bioid := bson.ObjectIdHex(bioID)
+	iter := r.C.Find(bson.M{"bioid": bioid}).Iter()
+	result := models.HealthDetail{}
+	for iter.Next(&result) {
+		healths = append(healths, result)
+	}
+	return healths
+}
+
+//GetHealthByBioID gets health detail associated with a BioID
+func (r *EmployeeRepository) GetHealthDetailByBioID(bioID string) (health models.HealthDetail, err error) {
+	err = r.C.Find(bson.ObjectIdHex(bioID)).One(&health)
+	return
+}
+
+//EditHealthByBioID edits health detail associated with a BioID
+func (r *EmployeeRepository) EditHealthByBioID(work *models.HealthDetail) error {
+	err := r.C.Update(bson.M{"bioid": health.BioID},
+		bson.M{"$set": bson.M{
+			"attachments": 			health.Attachments,
+			"height":  	 			health.CompanyWorked,
+			"weight":    			health.WorkHistoryExt,
+			"eyecolor":	  			health.Designation,
+			"knownallergies":		health.ResignedOn,
+			"eyecolor":				health.Address,
+			"healthconcerns":		health.Salary,
+		}})
+	return err
+}
+
 //AddExpenseClaimByEmpID persists expense claim associated with EmpID, MgrID
-func (r *EmployeeRepository) AddExpenseClaimByEmpID(orgID string, empID string, mgrID string, typedID string, projectID string, taskID string, accountID string) (claim models.ExpenseClaim, err error) {
+func (r *EmployeeRepository) AddExpenseClaimByEmpID(orgID string, empID string, mgrID string, typeID string, projectID string, taskID string, accountID string) (claim models.ExpenseClaim, err error) {
 	objID := bson.NewObjectId()
 	claim.ID = objID
 	claim.OrgID = bson.ObjectIdHex(orgID)
@@ -254,7 +478,7 @@ func (r *EmployeeRepository) AddExpenseClaimByEmpID(orgID string, empID string, 
 }
 
 //AddLeaveAllocationByEmpID persists leave allocation associated with EmpID, MgrID
-func (r *EmployeeRepository) AddLeaveAllByEmpID(orgID string, empID string, mgrID string, typedID string) (leaveAll models.LeaveAllocation, err error) {
+func (r *EmployeeRepository) AddLeaveAllByEmpID(orgID string, empID string, mgrID string, typeID string) (leaveAll models.LeaveAllocation, err error) {
 	objID := bson.NewObjectId()
 	leaveAll.ID = objID
 	leaveAll.OrgID = bson.ObjectIdHex(orgID)
@@ -268,7 +492,7 @@ func (r *EmployeeRepository) AddLeaveAllByEmpID(orgID string, empID string, mgrI
 }
 
 //AddLeaveApplicationByEmpID persists leave application associated with EmpID, MgrID
-func (r *EmployeeRepository) AddLeaveAppByEmpID(orgID string, empID string, mgrID string, typedID string) (leaveApp models.LeaveApplication, err error) {
+func (r *EmployeeRepository) AddLeaveAppByEmpID(orgID string, empID string, mgrID string, typeID string) (leaveApp models.LeaveApplication, err error) {
 	objID := bson.NewObjectId()
 	leaveApp.ID = objID
 	leaveApp.OrgID = bson.ObjectIdHex(orgID)
@@ -372,6 +596,34 @@ func (r *EmployeeRepository) GetClaimsByOrgID(orgID string) []models.ExpenseClai
 	return claims
 }
 
+//EditClaimsByEmpID edits claim associated with an EmpID
+func (r *EmployeeRepository) EditClaimByEmpID(claim *models.ExpenseClaim) error {
+	err := r.C.Update(bson.M{"empid": claim.ExpenseApplier},
+		bson.M{"$set": bson.M{
+			"description": 			claim.Description,
+			"claimamount":  	 	claim.ClaimAmount,
+			"remarks":    			claim.Remarks,
+			"expensedate":			claim.ExpenseDate,
+			"updatedat":	  		time.Now(),
+		}})
+	return err
+}
+
+//EditClaimsByMgrID edits claim associated with a MgrID
+func (r *EmployeeRepository) EditClaimByMgrID(claim *models.ExpenseClaim) error {
+	err := r.C.Update(bson.M{"mgrid": claim.ExpenseApprover},
+		bson.M{"$set": bson.M{
+			"ispaid": 					claim.Description,
+			"approvalstatus":  	 		claim.ClaimAmount,
+			"totalsanctionedamount":   	claim.Remarks,
+			"paymentmode":				claim.PaymentMode,
+			"status":					claim.Status,
+			"sanctionedamount":			claim.SanctionedAmount,
+			"updatedat":	  			time.Now(),
+		}})
+	return err
+}
+
 //GetAllcoationByID gets leave allocation associated with an ID
 func (r *EmployeeRepository) GetLeaveAllocationByID(id string) (leaveAll models.LeaveAllocation, err error) {
 	err = r.C.Find(bson.ObjectIdHex(id)).One(&leaveAll)
@@ -400,6 +652,24 @@ func (r *EmployeeRepository) GetAllocationsByOrgID(orgID string) []models.LeaveA
 		allocations = append(allocations, result)
 	}
 	return allocations
+}
+
+//EditLeaveAllocationByID edits leave allocation associated with an ID
+func (r *EmployeeRepository) EditLeaveAllocationByID(leave *models.LeaveAllocation) error {
+	err := r.C.Update(bson.M{"_id": leave.ID},
+		bson.M{"$set": bson.M{
+			"description": 		leave.Description,
+			"fromdate":  	 	leave.FromDate,
+			"todate":    		leave.ToDate,
+			"updatedat":  		time.Now(),
+		}})
+	return err
+}
+
+//DeleteLeaveAllocationById deletes leave allocation out of the system by Id
+func (r *EmployeeRepository) DeleteLeaveAllocationById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
 }
 
 //GetLeaveApplicationByID gets leave application associated with an ID
@@ -444,6 +714,24 @@ func (r *EmployeeRepository) GetApplicationsByEmpID(empID string) []models.Leave
 	return apps
 }
 
+//EditLeaveApplicationByID edits leave application associated with an ID
+func (r *EmployeeRepository) EditLeaveApplicationByID(leave *models.LeaveApplication) error {
+	err := r.C.Update(bson.M{"_id": leave.ID},
+		bson.M{"$set": bson.M{
+			"description": 		leave.Description,
+			"fromdate":  	 	leave.FromDate,
+			"todate":    		leave.ToDate,
+			"updatedat":  		time.Now(),
+		}})
+	return err
+}
+
+//DeleteLeaveApplicationById deletes leave application out of the system by Id
+func (r *EmployeeRepository) DeleteLeaveApplicationById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
+}
+
 //GetBlockListByID gets block list associated with an ID
 func (r *EmployeeRepository) GetLeaveBlockListByID(id string) (blk models.LeaveBlockList, err error) {
 	err = r.C.Find(bson.ObjectIdHex(id)).One(&blk)
@@ -462,6 +750,25 @@ func (r *EmployeeRepository) GetBlockListsByOrgID(orgID string) []models.LeaveBl
 	return blockLists
 }
 
+//EditLeaveBlockListByID edits leave block list associated with an ID
+func (r *EmployeeRepository) EditLeaveBlockListByID(blk *models.LeaveBlockList) error {
+	err := r.C.Update(bson.M{"_id": blk.ID},
+		bson.M{"$set": bson.M{
+			"name": 		blk.Name,
+			"blockdate":  	blk.BlockDate,
+			"reason":    	blk.Reason,
+			"applyall":		blk.ApplyAll,
+			"updatedat":  	time.Now(),
+		}})
+	return err
+}
+
+//DeleteLeaveBlockListById deletes leave blocklist out of the system by Id
+func (r *EmployeeRepository) DeleteLeaveBlockListById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
+}
+
 //GetHolidayListByID gets holiday list associated with an ID
 func (r *EmployeeRepository) GetHolidayListByID(id string) (hol models.HolidayList, err error) {
 	err = r.C.Find(bson.ObjectIdHex(id)).One(&hol)
@@ -478,6 +785,26 @@ func (r *EmployeeRepository) GetHolidayListsByOrgID(orgID string) []models.Holid
 		holLists = append(holLists, result)
 	}
 	return holLists
+}
+
+//EditHolidayListByID edits holiday list associated with an ID
+func (r *EmployeeRepository) EditHolidayListByID(hol *models.HolidayList) error {
+	err := r.C.Update(bson.M{"_id": hol.ID},
+		bson.M{"$set": bson.M{
+			"name": 		hol.Name,
+			"fromdate":  	hol.FromDate,
+			"todate":    	hol.ToDate,
+			"weeklyoff":	hol.WeeklyOff,
+			"description":	hol.Description,
+			"holidaydate":  hol.HolidayDate,
+		}})
+	return err
+}
+
+//DeleteLHolidayListById deletes holiday list out of the system by Id
+func (r *EmployeeRepository) DeleteHolidayListById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
 }
 
 //GetAppraisalByID gets appraisal associated with an ID
@@ -501,13 +828,36 @@ func (r *EmployeeRepository) GetAppraisalsByEmpID(empID string) []models.Apprais
 //GetAppraisalsByOrgID gets appraisals associated with an OrgID
 func (r *EmployeeRepository) GetAppraisalsByOrgID(orgID string) []models.Appraisal {
 	var appraisals []models.Appraisal
-	orgid := bson.ObjectIdHex(empID)
+	orgid := bson.ObjectIdHex(orgID)
 	iter := r.C.Find(bson.M{"orgid": orgid}).Iter()
 	result := models.Appraisal{}
 	for iter.Next(&result) {
 		appraisals = append(appraisals, result)
 	}
 	return appraisals
+}
+
+//EditAppraisalByID edits appraisal associated with an ID
+func (r *EmployeeRepository) EditAppraisalByID(app *models.Appraisal) error {
+	err := r.C.Update(bson.M{"_id": blk.ID},
+		bson.M{"$set": bson.M{
+			"stardate": 	app.StartDate,
+			"enddate":  	app.EndDate,
+			"remarks":    	app.Remarks,
+			"title":		app.Title,
+			"description":  app.Description,
+			"kra":			app.KRA, 
+			"perweightage":	app.PerWeightage, 
+			"score":		app.Score, 
+			"status":		app.Status,
+		}})
+	return err
+}
+
+//DeleteAppraisalById deletes appraisal out of the system by Id
+func (r *EmployeeRepository) DeleteAppraisalById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
 }
 
 //GetExitByID gets exit associated with an ID
@@ -538,6 +888,28 @@ func (r *EmployeeRepository) GetExitsByOrgID(orgID string) []models.Exit {
 		exits = append(exits, result)
 	}
 	return exits
+}
+
+//EditExitByID edits exit associated with an ID
+func (r *EmployeeRepository) EditExitByID(ex *models.Exit) error {
+	err := r.C.Update(bson.M{"_id": exit.ID},
+		bson.M{"$set": bson.M{
+			"leavingreason":  			ex.LeavingReason,
+			"relievingdate":    		ex.RelievingDate,
+			"leaveencashed":			ex.LeaveEncashed,
+			"encashmentdate":  			ex.EncashmentDate,
+			"interviewdate":			ex.InterviewDate, 
+			"resignationreason":		ex.ResignationReason, 
+			"newworkplace":				ex.NewWorkPlace, 
+			"feedback":					ex.Feedback,
+		}})
+	return err
+}
+
+//DeleteExitById deletes exit out of the system by Id
+func (r *EmployeeRepository) DeleteExitById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
 }
 
 //AddSalaryComponentByOrgID persists salary component associated with OrgID
@@ -684,18 +1056,37 @@ func (r *EmployeeRepository) GetSalaryEmployeeByID(id string) (sal models.Salary
 
 //GetSalaryEmployeesByOrgID gets salary employees associated with an OrgID
 func (r *EmployeeRepository) GetSalaryEmployeesByOrgID(orgID string) []models.SalaryEmployee {
-	var salEmployees []models.SalaryEmployees
+	var salEmployees []models.SalaryEmployee
 	orgid := bson.ObjectIdHex(orgID)
 	iter := r.C.Find(bson.M{"orgid": orgid}).Iter()
-	result := models.SalaryEmployees{}
+	result := models.SalaryEmployee{}
 	for iter.Next(&result) {
 		employees := result.Employees
 		for _, e := range employees {
-			salEmployees = append(e, result)
+			e = append(e, result)
 		}
 	}
 	return salEmployees
 }
+
+//EditSalaryEmployeeByID edits salary employee associated with an ID
+func (r *EmployeeRepository) EditSalaryEmployeeByID(sal *models.SalaryEmployee) error {
+	err := r.C.Update(bson.M{"_id": sal.ID},
+		bson.M{"$set": bson.M{
+			"fromdate": 	sal.FromDate,
+			"todate":  		sal.ToDate,
+			"base":    		sal.Base,
+			"variable":		sal.Variable,
+		}})
+	return err
+}
+
+//DeleteSalaryEmployeeById deletes salary employee out of the system by Id
+func (r *EmployeeRepository) DeleteSalaryEmployeeById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
+}
+
 
 //GetSalaryStructureByID gets salary structure associated with an ID
 func (r *EmployeeRepository) GetSalaryStructureByID(id string) (sal models.SalaryStructure, err error) {
@@ -727,6 +1118,31 @@ func (r *EmployeeRepository) GetSalaryStructuresByAcctID(acctID string) []models
 	return structures
 }
 
+//EditSalaryStructureByID edits salary structure associated with an ID
+func (r *EmployeeRepository) EditSalaryStructureByID(sal *models.SalaryStructure) error {
+	err := r.C.Update(bson.M{"_id": sal.ID},
+		bson.M{"$set": bson.M{
+			"payrollfrequency": 		sal.PayrollFrequency,
+			"isactive":  				sal.IsActive,
+			"isdefault":    			sal.IsDefault,
+			"hourrate":					sal.HourRate,
+			"paymentmode":  			sal.PaymentMode,
+			"isamountformulabased":		sal.IsAmountFormulaBased, 
+			"isamountlwpbased":			sal.IsLAmountwpBased, 
+			"defaultamount":			sal.DefaultAmount, 
+			"amount":					sal.Amount,
+			"updatedat":				time.Now(),
+		}})
+	return err
+}
+
+//DeleeSalaryStructurelById deletes salary structure out of the system by Id
+func (r *EmployeeRepository) DeleteSalaryStructureById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
+}
+
+
 //GetActivityTypeByID gets activity type associated with an ID
 func (r *EmployeeRepository) GetActivityTypeByID(id string) (actType models.ActivityType, err error) {
 	err = r.C.Find(bson.ObjectIdHex(id)).One(&actType)
@@ -743,6 +1159,25 @@ func (r *EmployeeRepository) GetActivityTypesByOrgID(orgID string) []models.Acti
 		types = append(types, result)
 	}
 	return types
+}
+
+//EditActivityTypeByID edits activity type associated with an ID
+func (r *EmployeeRepository) EditActivityTypeByID(actType *models.ActivityType) error {
+	err := r.C.Update(bson.M{"_id": actType.ID},
+		bson.M{"$set": bson.M{
+			"name": 		actType.Name,
+			"billingrate":  actType.BillingRate,
+			"costingrate":  actType.CostingRate,
+			"disabled":		actType.Disabled,
+			"updatedat":  	time.Now(),
+		}})
+	return err
+}
+
+//DeleteActivityTypeById deletes activity type out of the system by Id
+func (r *EmployeeRepository) DeleteActivityTypeById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
 }
 
 //GetWorkingHourByID gets working hour associated with an ID
@@ -763,6 +1198,24 @@ func (r *EmployeeRepository) GetWorkingHoursByOrgID(orgID string) []models.Worki
 	return hours
 }
 
+//EditWorkingHourByID edits working hour associated with an ID
+func (r *EmployeeRepository) EditWorkingHourByID(work *models.WorkingHour) error {
+	err := r.C.Update(bson.M{"_id": work.ID},
+		bson.M{"$set": bson.M{
+			"starttime": 	work.StartTime,
+			"endtime":  	work.EndTime,
+			"enabled":    	work.Enabled,
+		}})
+	return err
+}
+
+//DeleteWorkingHourById deletes working hour out of the system by Id
+func (r *EmployeeRepository) DeleteWorkingHourById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
+}
+
+
 //GetOperationByID gets operation associated with an ID
 func (r *EmployeeRepository) GetOperationByID(id string) (op models.Operation, err error) {
 	err = r.C.Find(bson.ObjectIdHex(id)).One(&op)
@@ -781,6 +1234,22 @@ func (r *EmployeeRepository) GetOperationsByOrgID(orgID string) []models.Operati
 	return ops
 }
 
+//EditOperationByID edits operation associated with an ID
+func (r *EmployeeRepository) EditOperationByID(op *models.Operation) error {
+	err := r.C.Update(bson.M{"_id": op.ID},
+		bson.M{"$set": bson.M{
+			"description": 	op.Description,
+		}})
+	return err
+}
+
+//DeleteOperationById deletes operation out of the system by Id
+func (r *EmployeeRepository) DeleteOperationById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
+}
+
+
 //GetWorkstationByID gets workstation associated with an ID
 func (r *EmployeeRepository) GetWorkstationByID(id string) (work models.Workstation, err error) {
 	err = r.C.Find(bson.ObjectIdHex(id)).One(&work)
@@ -798,6 +1267,28 @@ func (r *EmployeeRepository) GetWorkstationsByOrgID(orgID string) []models.Works
 	}
 	return stations
 }
+
+//EditWorkstationByID edits workstation associated with an ID
+func (r *EmployeeRepository) EditWorkstationByID(work *models.Workstation) error {
+	err := r.C.Update(bson.M{"_id": work.ID},
+		bson.M{"$set": bson.M{
+			"name": 					work.Name,
+			"description":  			work.Description,
+			"hourrate":    				work.HourRate,
+			"hourrateelectricity":		work.HourRateElectricity,
+			"hourraterent":  			work.HourRateRent,
+			"hourratelabor":			work.HourRateLabor, 
+			"hourrateconsumable":		work.HourRateConsumable,
+		}})
+	return err
+}
+
+//DeleteWorkstationById deletes workstation out of the system by Id
+func (r *EmployeeRepository) DeleteWorkstationById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
+}
+
 
 //GetTimesheetByID gets timesheet associated with an ID
 func (r *EmployeeRepository) GetTimesheetByID(id string) (time models.Timesheet, err error) {
@@ -839,6 +1330,32 @@ func (r *EmployeeRepository) GetTimesheetsByMgrID(mgrID string) []models.Timeshe
 		sheets = append(sheets, result)
 	}
 	return sheets
+}
+
+//EditTimesheetByID edits timesheet associated with an ID
+func (r *EmployeeRepository) EditTimesheetByID(time *models.Timesheet) error {
+	err := r.C.Update(bson.M{"_id": time.ID},
+		bson.M{"$set": bson.M{
+			"stardate": 		time.StartDate,
+			"enddate":  		time.EndDate,
+			"fromtime":    		time.FromTime,
+			"totime":			time.ToTime,
+			"completedqty":  	time.CompletedQty,
+			"hours":			time.Hours, 
+			"billable":			time.Billable, 
+			"billinghours":		time.BillingHours, 
+			"billingamount":	time.BillingAmount,
+			"costingamount":	time.CostingAmount,
+			"note":				time.Note,
+			"updatedat":		time.Now(),
+		}})
+	return err
+}
+
+//DeleteTimesheetById deletes timesheet out of the system by Id
+func (r *EmployeeRepository) DeleteTimesheetById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
 }
 
 //GetSalarySlipByID gets salary slip associated with an ID
@@ -883,6 +1400,29 @@ func (r *EmployeeRepository) GetSalarySlipsByMgrID(mgrID string) []models.Salary
 	return slips
 }
 
+//EditSalarySlipByID edits salary slip associated with an ID
+func (r *EmployeeRepository) EditSalarySlipByID(sal *models.SalarySlip) error {
+	err := r.C.Update(bson.M{"_id": sal.ID},
+		bson.M{"$set": bson.M{
+			"stardate": 				sal.StartDate,
+			"enddate":  				sal.EndDate,
+			"issalarysliptimesheet":    sal.IsSalarySlipTimesheet,
+			"workinghours":				sal.WorkingHours,
+			"paymentdays":  			sal.PaymentDays,
+			"designation":				sal.Designation, 
+			"grosspay":					sal.GrossPay, 
+			"interestamount":			sal.InterestAmount, 
+			"updatedat":				time.Now(),
+		}})
+	return err
+}
+
+//DeleteSalarySlipById deletes salary slip out of the system by Id
+func (r *EmployeeRepository) DeleteSalarySlipById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
+}
+
 //GetActivityCostByID gets activity cost associated with an ID
 func (r *EmployeeRepository) GetActivityCostByID(id string) (cost models.ActivityCost, err error) {
 	err = r.C.Find(bson.ObjectIdHex(id)).One(&cost)
@@ -923,4 +1463,23 @@ func (r *EmployeeRepository) GetActivityCostsByTypeID(typeID string) []models.Ac
 		costs = append(costs, result)
 	}
 	return costs
+}
+
+//EditActivityCostByID edits activity cost associated with an ID
+func (r *EmployeeRepository) EditActivityCostByID(cost *models.ActivityCost) error {
+	err := r.C.Update(bson.M{"_id": cost.ID},
+		bson.M{"$set": bson.M{
+			"activitytype":		cost.ActivityType, 
+			"costingrate":		cost.CostingRate, 
+			"billingrate":		cost.BillingingRate,
+			"status":			cost.Status,
+			"updatedat":		time.Now(),
+		}})
+	return err
+}
+
+//DeleteActivityCostById deletes activity cost out of the system by Id
+func (r *EmployeeRepository) DeleteActivityCostById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
 }

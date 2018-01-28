@@ -62,6 +62,24 @@ func (r *BillingRepository) GetBillingsByOrgID(orgID string) []models.Billing {
 	return bills
 }
 
+//EditBillingByID edits billing associated with an ID
+func (r *BillingRepository) EditBillingByID(bill *models.Billing) error {
+	err := r.C.Update(bson.M{"_id": bill.ID},
+		bson.M{"$set": bson.M{
+			"currency": 		bill.Currency,
+			"billingfreq":   	bill.BillingFreq,
+			"lastbilled":       time.Now(),
+		}})
+	return err
+}
+
+//DeleteBillingById deletes billing out of the system by Id
+func (r *BillingRepository) DeleteBillingById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
+}
+
+
 //AddTransaction persists Transcaction associated with a BillingID
 func (r *BillingRepository) AddTransactionByBillingID(billingID string) (tx models.Transaction, err error) {
 	objID := bson.NewObjectId()
@@ -101,4 +119,23 @@ func (r *BillingRepository) GetTransactionByBillingID(billingID string) []models
 		txs = append(txs, result)
 	}
 	return txs
+}
+
+
+//EditTransactionByID edits transaction associated with an ID
+func (r *BillingRepository) EditTransactiongByID(tx *models.Transaction) error {
+	err := r.C.Update(bson.M{"_id": tx.ID},
+		bson.M{"$set": bson.M{
+			"statement": 		tx.Statement,
+			"paymentref":   	tx.PaymentRef,
+			"status":       	tx.Status,
+			"updatedat":		time.Now(),
+		}})
+	return err
+}
+
+//DeleteTransactionById deletes transaction out of the system by Id
+func (r *BillingRepository) DeleteTransactionById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
 }

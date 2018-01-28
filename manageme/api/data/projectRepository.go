@@ -7,6 +7,8 @@ package data
  *
  */
 import (
+	"time"
+
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 
@@ -22,8 +24,10 @@ type ProjectRepository struct {
 func (r *ProjectRepository) AddTaskByEmpID(empID string) (task models.Task, err error) {
 	objID := bson.NewObjectId()
 	task.ID = objID
-	task.empID = bson.ObjectIdHex(empID)
+	task.InitiatedBy = bson.ObjectIdHex(empID)
 	task.Status = "Started"
+	task.CreatedAt = time.Now()
+	task.UpdatedAt = time.Now()
 
 	err = r.C.Insert(&task)
 	return
@@ -33,8 +37,10 @@ func (r *ProjectRepository) AddTaskByEmpID(empID string) (task models.Task, err 
 func (r *ProjectRepository) AddChildTaskByEmpID(empID string, taskID string) (task models.Task, err error) {
 	objID := bson.NewObjectId()
 	task.ID = objID
-	task.empID = bson.ObjectIdHex(empID)
+	task.InitiatedBy = bson.ObjectIdHex(empID)
 	task.TaskDependent = bson.ObjectIdHex(taskID)
+	task.CreatedAt = time.Now()
+	task.UpdatedAt = time.Now()
 
 	err = r.C.Insert(&task)
 	return
@@ -50,7 +56,7 @@ func (r *ProjectRepository) GetTaskByID(id string) (task models.Task, err error)
 func (r *ProjectRepository) GetTasks() []models.Task {
 	var tasks []models.Task
 	iter := r.C.Find(nil).Iter()
-	result := models.Project{}
+	result := models.Task{}
 	for iter.Next(&result) {
 		tasks = append(tasks, result)
 	}
@@ -81,6 +87,40 @@ func (r *ProjectRepository) GetTasksByEmpID(empID string) []models.Task {
 	return tasks
 }
 
+//EditTaskByID edits task associated with an ID
+func (r *ProjectRepository) EditTaskByID(task *models.Task) error {
+	err := r.C.Update(bson.M{"_id": task.ID},
+		bson.M{"$set": bson.M{
+			"name":               task.Name,
+			"subject":            task.Subject,
+			"ismilestone":        task.IsMilestone,
+			"priority":           task.Priority,
+			"expectedstartdate":  task.ExpectedStartDate,
+			"expectedenddate":    task.ExpectedEndDate,
+			"actualstartdate":    task.ActualStartDate,
+			"actualenddate":      task.ActualEndDate,
+			"taskweight":         task.TaskWeight,
+			"reviewdate":         task.ReviewDate,
+			"note":               task.Note,
+			"estimatedcosting":   task.EstimatedCosting,
+			"totalcostingamount": task.TotalCostingAmount,
+			"totalexpenseclaim":  task.TotalExpenseClaim,
+			"totalbillingamount": task.TotalBillingAmount,
+			"totalpurchasecost":  task.TotalPurchaseCost,
+			"totalsalescost":     task.TotalSalesCost,
+			"closingdate":        task.ClosingDate,
+			"status":             task.Status,
+			"updatedat":          time.Now(),
+		}})
+	return err
+}
+
+//DeleteTaskById deletes task out of the system by Id
+func (r *ProjectRepository) DeleteTaskById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
+}
+
 //AddProjectTask persists project task associated with OrgID
 func (r *ProjectRepository) AddProjectTaskByOrgID(orgID string) (task models.ProjectTask, err error) {
 	objID := bson.NewObjectId()
@@ -104,8 +144,8 @@ func (r *ProjectRepository) GetProjectTasks() []models.ProjectTask {
 	result := models.ProjectTask{}
 	for iter.Next(&result) {
 		tasks := result.Tasks
-		for _, t = range tasks {
-			projectTasks = append(t, result)
+		for _, t := range tasks {
+			t = append(t, result)
 		}
 	}
 	return projectTasks
@@ -119,11 +159,31 @@ func (r *ProjectRepository) GetProjectTasksByOrgID(orgID string) []models.Projec
 	result := models.ProjectTask{}
 	for iter.Next(&result) {
 		tasks := result.Tasks
-		for _, t = range tasks {
-			projectTasks = append(t, result)
+		for _, t := range tasks {
+			t = append(t, result)
 		}
 	}
 	return projectTasks
+}
+
+//EditProjectTaskByID edits project task associated with an ID
+func (r *ProjectRepository) EditProjectTaskByID(task *models.ProjectTask) error {
+	err := r.C.Update(bson.M{"_id": task.ID},
+		bson.M{"$set": bson.M{
+			"title":       task.Title,
+			"description": task.Description,
+			"tasks":       task.Tasks,
+			"startdate":   task.StartDate,
+			"enddate":     task.EndDate,
+			"status":      task.Status,
+		}})
+	return err
+}
+
+//DeleteProjectTaskById deletes project task out of the system by Id
+func (r *ProjectRepository) DeleteProjectTaskById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
 }
 
 //AddProject persists project associated with MgrID
@@ -132,7 +192,7 @@ func (r *ProjectRepository) AddProjectMgrID(mgrID string, typeID string, project
 	project.ID = objID
 	project.Manager = bson.ObjectIdHex(mgrID)
 	project.ProjectTypeID = bson.ObjectIdHex(typeID)
-	project.projectTaskID = bson.ObjectIdHex(projectTaskID)
+	project.ProjectTaskID = bson.ObjectIdHex(projectTaskID)
 	project.Status = "Not Started"
 
 	err = r.C.Insert(&project)
@@ -190,4 +250,34 @@ func (r *ProjectRepository) GetProjectsByTypeID(typeID string) []models.Project 
 		projects = append(projects, result)
 	}
 	return projects
+}
+
+//EditProjectByID edits task associated with an ID
+func (r *ProjectRepository) EditProjectByID(project *models.Project) error {
+	err := r.C.Update(bson.M{"_id": project.ID},
+		bson.M{"$set": bson.M{
+			"name":               project.Name,
+			"isactive":           project.IsActive,
+			"priority":           project.Priority,
+			"expectedstartdate":  project.ExpectedStartDate,
+			"expectedenddate":    project.ExpectedEndDate,
+			"actualstartdate":    project.ActualStartDate,
+			"actualenddate":      project.ActualEndDate,
+			"note":               project.Note,
+			"estimatedcosting":   project.EstimatedCosting,
+			"totalcostingamount": project.TotalCostingAmount,
+			"totalexpenseclaim":  project.TotalExpenseClaim,
+			"totalbillingamount": project.TotalBillingAmount,
+			"totalpurchasecost":  project.TotalPurchaseCost,
+			"totalsalescost":     project.TotalSalesCost,
+			"status":             project.Status,
+			"updatedat":          time.Now(),
+		}})
+	return err
+}
+
+//DeleteProjectById deletes project out of the system by Id
+func (r *ProjectRepository) DeleteProjectById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
 }

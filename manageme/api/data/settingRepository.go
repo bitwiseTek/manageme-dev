@@ -6,7 +6,9 @@ package data
  * @date 18/01/18
  *
  */
- import (
+import (
+	"time"
+
 	"gopkg.in/mgo.v2"
 	"gopkg.in/mgo.v2/bson"
 
@@ -121,6 +123,24 @@ func (r *SettingRepository) GetDeptsByOrgID(orgID string) []models.Department {
 	return depts
 }
 
+//EditDeptByID edits dept associated with an ID
+func (r *SettingRepository) EditDepartmentByID(dept *models.Deparmtent) error {
+	err := r.C.Update(bson.M{"_id": dept.ID},
+		bson.M{"$set": bson.M{
+			"name":        dept.Name,
+			"description": dept.Description,
+			"updatedat":   time.Now(),
+			"status":      dept.Status,
+		}})
+	return err
+}
+
+//DeleteDeptById deletes dept out of the system by Id
+func (r *SettingRepository) DeleteDeptById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
+}
+
 //GetBranchesByOrgID gets branches associated with a OrgID
 func (r *SettingRepository) GetBranchesByOrgID(orgID string) []models.Branch {
 	var branches []models.Branch
@@ -131,6 +151,23 @@ func (r *SettingRepository) GetBranchesByOrgID(orgID string) []models.Branch {
 		branches = append(branches, result)
 	}
 	return branches
+}
+
+//EditBranchByID edits  branch associated with an ID
+func (r *SettingRepository) EditBranchByID(branch *models.Branch) error {
+	err := r.C.Update(bson.M{"_id": branch.ID},
+		bson.M{"$set": bson.M{
+			"name":      branch.Name,
+			"updatedat": time.Now(),
+			"status":    dept.Status,
+		}})
+	return err
+}
+
+//DeleteBranchById deletes branch out of the system by Id
+func (r *SettingRepository) DeleteBrancById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
 }
 
 //GetDesignationsByOrgID gets designations associated with a OrgID
@@ -145,6 +182,23 @@ func (r *SettingRepository) GetDesignationsByOrgID(orgID string) []models.Design
 	return des
 }
 
+//EditDesignationByID edits designation associated with an ID
+func (r *SettingRepository) EditDesignationByID(des *models.Designation) error {
+	err := r.C.Update(bson.M{"_id": des.ID},
+		bson.M{"$set": bson.M{
+			"name":      des.Name,
+			"updatedat": time.Now(),
+			"status":    des.Status,
+		}})
+	return err
+}
+
+//DeleteDesignationById deletes designation out of the system by Id
+func (r *SettingRepository) DeleteDesById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
+}
+
 //GetSalaryModesByOrgID gets salary modes associated with a OrgID
 func (r *SettingRepository) GetModesByOrgID(orgID string) []models.SalaryMode {
 	var salModes []models.SalaryMode
@@ -155,6 +209,23 @@ func (r *SettingRepository) GetModesByOrgID(orgID string) []models.SalaryMode {
 		salModes = append(salModes, result)
 	}
 	return salModes
+}
+
+//EditSalaryModeByID edits salary mode associated with an ID
+func (r *SettingRepository) EditSalaryModeByID(sal *models.SalaryMode) error {
+	err := r.C.Update(bson.M{"_id": sal.ID},
+		bson.M{"$set": bson.M{
+			"name":      sal.Name,
+			"updatedat": time.Now(),
+			"status":    sal.Status,
+		}})
+	return err
+}
+
+//DeleteSalaryModeById deletes salary mode out of the system by Id
+func (r *SettingRepository) DeleteSalaryModeById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
 }
 
 //GetLeaveTypesByOrgID gets leave types associated with a OrgID
@@ -169,6 +240,23 @@ func (r *SettingRepository) GetLeaveTypesByOrgID(orgID string) []models.LeaveTyp
 	return leaveTypes
 }
 
+//EditLeaveTypeByID edits leave type associated with an ID
+func (r *SettingRepository) EditLeaveTypeByID(leave *models.LeaveType) error {
+	err := r.C.Update(bson.M{"_id": leave.ID},
+		bson.M{"$set": bson.M{
+			"name":      leave.Name,
+			"updatedat": time.Now(),
+			"status":    leave.Status,
+		}})
+	return err
+}
+
+//DeleteLeaveTypeById deletes leave type out of the system by Id
+func (r *SettingRepository) DeleteLeaveTypeById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
+}
+
 //GetClaimTypesByOrgID gets leave types associated with a OrgID
 func (r *SettingRepository) GetClaimTypesByOrgID(orgID string) []models.ExpenseClaimType {
 	var claimTypes []models.ExpenseClaimType
@@ -181,6 +269,23 @@ func (r *SettingRepository) GetClaimTypesByOrgID(orgID string) []models.ExpenseC
 	return claimTypes
 }
 
+//EditClaimTypeByID edits claim type associated with an ID
+func (r *SettingRepository) EditClaimTypeByID(claimType *models.ExpenseClaimType) error {
+	err := r.C.Update(bson.M{"_id": claimType.ID},
+		bson.M{"$set": bson.M{
+			"name":      claimType.Name,
+			"updatedat": time.Now(),
+			"status":    claimType.Status,
+		}})
+	return err
+}
+
+//DeleteClaimTypeById deletes claim type out of the system by Id
+func (r *SettingRepository) DeleteClaimTypeById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
+}
+
 //GetProjectTypesByOrgID gets project types associated with a OrgID
 func (r *SettingRepository) GetProjectTypesByOrgID(orgID string) []models.ProjectType {
 	var projectTypes []models.ProjectType
@@ -191,6 +296,23 @@ func (r *SettingRepository) GetProjectTypesByOrgID(orgID string) []models.Projec
 		projectTypes = append(projectTypes, result)
 	}
 	return projectTypes
+}
+
+//EditProjectTypeByID edits project type associated with an ID
+func (r *SettingRepository) EditProjectTypeByID(projectType *models.ProjectType) error {
+	err := r.C.Update(bson.M{"_id": projectType.ID},
+		bson.M{"$set": bson.M{
+			"name":      projectType.Name,
+			"updatedat": time.Now(),
+			"status":    projectType.Status,
+		}})
+	return err
+}
+
+//DeleteProjectTypeById deletes project type out of the system by Id
+func (r *SettingRepository) DeleteProjectTypeById(id string) error {
+	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
+	return err
 }
 
 //GetDeptByID gets dept associated with an ID
