@@ -132,8 +132,8 @@ type (
 		EmRelationshipType        string        `json:"emrelationshiptype"`
 		EmAccommodationType       string        `json:"emaccommodationtype"`
 		EmPhone                   string        `json:"emphone"`
-		CreatedAt    	   		  time.Time     `json:"createdat"`
-		UpdatedAt    	   		  time.Time     `json:"updatedat"`
+		CreatedAt                 time.Time     `json:"createdat"`
+		UpdatedAt                 time.Time     `json:"updatedat"`
 	}
 
 	// Account Struct for DB Model
@@ -178,8 +178,8 @@ type (
 		ClaimAmount           float32       `json:"claimamount"`
 		SanctionedAmount      float32       `json:"sanctionedamount"`
 		Remarks               string        `json:"remarks"`
-		CreatedAt    	      time.Time     `json:"createdat"`
-		UpdatedAt    	      time.Time     `json:"updatedat"`
+		CreatedAt             time.Time     `json:"createdat"`
+		UpdatedAt             time.Time     `json:"updatedat"`
 	}
 
 	// LeaveAllocation Struct for DB Model
@@ -197,8 +197,8 @@ type (
 		CarryForwardedLeaves int           `json:"carryforwardedleaves"`
 		TotalLeavesAllocated int           `json:"totalleavesallocated"`
 		AllocatedOn          time.Time     `json:"allocatedon,omitempty"`
-		CreatedAt    	     time.Time     `json:"createdat"`
-		UpdatedAt    	     time.Time     `json:"updatedat"`
+		CreatedAt            time.Time     `json:"createdat"`
+		UpdatedAt            time.Time     `json:"updatedat"`
 	}
 
 	// LeaveApplication Struct for DB Model
@@ -301,7 +301,7 @@ type (
 		Attachments []string      `json:"attachments"`
 		IDType      string        `json:"idtype"`
 		IDNo        string        `json:"idno"`
-		VaidTill    string        `json:"validtill"`
+		ValidTill   string        `json:"validtill"`
 		IssuePlace  string        `json:"issueplace"`
 		IssueDate   string        `json:"issuedate"`
 	}
@@ -347,11 +347,11 @@ type (
 	SalaryEmployee struct {
 		ID        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 		OrgID     bson.ObjectId `json:"orgid"`
-		Employees []Employee   `json:"employees"`
+		Employees []Employee    `json:"employees"`
 		FromDate  bool          `json:"fromdate"`
 		ToDate    bool          `json:"todate"`
 		Base      float32       `json:"base"`
-		Varaible  float32       `json:"variable"`
+		Variable  float32       `json:"variable"`
 	}
 
 	// SalaryComponent Struct for DB Model
@@ -384,9 +384,9 @@ type (
 		IsAmountFormulaBased bool          `json:"isamountformulabased"`
 		IsAmountLwpBased     bool          `json:"isamountlwpbased"`
 		Amount               float32       `json:"amount"`
-		DefaulAmount         float32       `json:"defaultamount"`
-		CreatedAt    	     time.Time     `json:"createdat"`
-		UpdatedAt    	     time.Time     `json:"updatedat"`
+		DefaultAmount        float32       `json:"defaultamount"`
+		CreatedAt            time.Time     `json:"createdat"`
+		UpdatedAt            time.Time     `json:"updatedat"`
 	}
 
 	// ActivityType Struct for DB Model
@@ -459,8 +459,8 @@ type (
 		PercentageBilled    float32       `json:"percentagebilled"`
 		TotalBilledAmount   float32       `json:"totalbilledamount"`
 		Note                string        `json:"note"`
-		CreatedAt    	    time.Time     `json:"createdat"`
-		UpdatedAt    	    time.Time     `json:"updatedat"`
+		CreatedAt           time.Time     `json:"createdat"`
+		UpdatedAt           time.Time     `json:"updatedat"`
 	}
 
 	// SalarySlip Struct for DB Model
@@ -483,8 +483,8 @@ type (
 		InterestAmount        float32       `json:"interestamount"`
 		RoundedTotal          int           `json:"roundedtotal"`
 		PostingDate           time.Time     `json:"bankaccount"`
-		CreatedAt    	   	  time.Time     `json:"createdat"`
-		UpdatedAt    	   	  time.Time     `json:"updatedat"`
+		CreatedAt             time.Time     `json:"createdat"`
+		UpdatedAt             time.Time     `json:"updatedat"`
 	}
 
 	// ActivityCost Struct for DB Model
@@ -496,7 +496,7 @@ type (
 		BillingRate  float32       `json:"billingrate"`
 		CostingRate  float32       `json:"costingrate"`
 		CreatedAt    time.Time     `json:"createdat"`
-		UpdatedAt	 time.Time     `json:"updatedat"`
+		UpdatedAt    time.Time     `json:"updatedat"`
 		Status       string        `json:"status,omitempty"`
 	}
 
@@ -629,8 +629,8 @@ type (
 		PercentComplete    float32       `json:"percentcomplete"`
 		ActualStartTime    time.Time     `json:"actualstarttime"`
 		ExpectedStartTime  time.Time     `json:"expectedstarttime"`
-		CreatedAt    	   time.Time     `json:"createdat"`
-		UpdatedAt    	   time.Time     `json:"updatedat"`
+		CreatedAt          time.Time     `json:"createdat"`
+		UpdatedAt          time.Time     `json:"updatedat"`
 		Status             string        `json:"status,omitempty"`
 	}
 
@@ -673,8 +673,8 @@ type (
 		GrossMargin        float32       `json:"grossmargin"`
 		PercentGrossMargin float32       `json:"percentgrossmargin"`
 		ActualStartTime    time.Time     `json:"actualstarttime"`
-		CreatedAt    	   time.Time     `json:"createdat"`
-		UpdatedAt    	   time.Time     `json:"updatedat"`
+		CreatedAt          time.Time     `json:"createdat"`
+		UpdatedAt          time.Time     `json:"updatedat"`
 		Status             string        `json:"status,omitempty"`
 	}
 
@@ -697,8 +697,8 @@ type (
 		Credit                  float32       `json:"credit"`
 		ExchangeRate            float32       `json:"exchangerate"`
 		IsAdvance               bool          `json:"isadvance"`
-		CreatedAt    	        time.Time     `json:"createdat"`
-		UpdatedAt    	        time.Time     `json:"updatedat"`
+		CreatedAt               time.Time     `json:"createdat"`
+		UpdatedAt               time.Time     `json:"updatedat"`
 	}
 
 	// JournalEntry Struct for DB Model
@@ -722,7 +722,7 @@ type (
 		TotalAmount         float32       `json:"totalamount"`
 		WriteOffAmount      float32       `json:"writeoffamount"`
 		PostingDate         time.Time     `json:"postingdate"`
-		CreatedAt    	    time.Time     `json:"createdat"`
-		UpdatedAt    	    time.Time     `json:"updatedat"`
+		CreatedAt           time.Time     `json:"createdat"`
+		UpdatedAt           time.Time     `json:"updatedat"`
 	}
 )
