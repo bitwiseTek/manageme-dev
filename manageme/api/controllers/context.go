@@ -10,7 +10,7 @@ package controllers
 import (
 	"gopkg.in/mgo.v2"
 
-	"github.com/manageme-dev/manageme/api/common"
+	"github.com/bitwiseTek/manageme-dev/manageme/api/common"
 )
 
 // Context used for maintaining HTTP Request Context
