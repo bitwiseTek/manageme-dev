@@ -103,8 +103,9 @@ type (
 		ID                        bson.ObjectId `bson:"_id,omitempty" json:"id"`
 		DepartmentID              bson.ObjectId `json:"departmentid"`
 		BranchID                  bson.ObjectId `json:"branchid"`
+		OrgID                     bson.ObjectId `json:"orgid"`
 		OrgUserID                 bson.ObjectId `json:"orguserid"`
-		ReportsTo                 bson.ObjectId `json:"mgrid,omitempty"`
+		ReportsTo                 bson.ObjectId `json:"empid,omitempty"`
 		EmployeeNo                string        `json:"employeeno"`
 		JoiningDate               string        `json:"joiningdate"`
 		EmploymentType            string        `json:"employmenttype"`
@@ -162,8 +163,8 @@ type (
 		ExpenseType           bson.ObjectId `json:"exptypeid"`
 		ExpApprover           bson.ObjectId `json:"mgrid"`
 		ExpApplier            bson.ObjectId `json:"empid"`
-		ProjectID             bson.ObjectId `json:"projectid"`
-		TaskID                bson.ObjectId `json:"taskid"`
+		ProjectID             bson.ObjectId `json:"projectid,omitempty"`
+		TaskID                bson.ObjectId `json:"taskid,omitempty"`
 		PayableAccount        bson.ObjectId `json:"accountid"`
 		IsPaid                bool          `json:"ispaid"`
 		ApprovalStatus        string        `json:"approvalstatus"`
@@ -420,7 +421,7 @@ type (
 	// Workstation Struct for DB Model
 	Workstation struct {
 		ID                  bson.ObjectId `bson:"_id,omitempty" json:"id"`
-		OperationID         bson.ObjectId `json:"workstationid"`
+		OperationID         bson.ObjectId `json:"operationid"`
 		WorkingHourID       bson.ObjectId `json:"workhourid"`
 		OrgID               bson.ObjectId `json:"orgid"`
 		Name                string        `json:"name"`
@@ -439,8 +440,8 @@ type (
 		ForEmployee         bson.ObjectId `json:"empid"`
 		ApprovedBy          bson.ObjectId `json:"mgrid"`
 		ProjectID           bson.ObjectId `json:"projectid,omitempty"`
-		ActivityTypeID      bson.ObjectId `json:"activitytypeid"`
-		WorkStationID       bson.ObjectId `json:"workstationid"`
+		ActivityTypeID      bson.ObjectId `json:"activitytypeid,omitempty"`
+		WorkStationID       bson.ObjectId `json:"workstationid,omitempty"`
 		StartDate           string        `json:"startdate"`
 		EndDate             string        `json:"enddate"`
 		FromTime            string        `json:"fromtime"`
@@ -683,7 +684,7 @@ type (
 		ID                      bson.ObjectId `bson:"_id,omitempty" json:"id"`
 		OrgID                   bson.ObjectId `json:"orgid"`
 		AccountID               bson.ObjectId `json:"accountid"`
-		ProjectID               bson.ObjectId `json:"projectid"`
+		ProjectID               bson.ObjectId `json:"projectid,omitempty"`
 		AccountType             string        `json:"accounttype"`
 		Balance                 float32       `json:"balance"`
 		AccountCurrency         string        `json:"accountcurrency"`

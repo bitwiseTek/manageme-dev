@@ -20,10 +20,11 @@ type ProjectRepository struct {
 	C *mgo.Collection
 }
 
-//AddTask persists Task associated with EmpID
-func (r *ProjectRepository) AddTaskByEmpID(empID string) (task models.Task, err error) {
+//AddTask persists Task associated with EmpID, OrgID
+func (r *ProjectRepository) AddTaskByEmpID(orgID string, empID string) (task models.Task, err error) {
 	objID := bson.NewObjectId()
 	task.ID = objID
+	task.OrgID = bson.ObjectIdHex(orgID)
 	task.InitiatedBy = bson.ObjectIdHex(empID)
 	task.Status = "Started"
 	task.CreatedAt = time.Now()
@@ -33,10 +34,11 @@ func (r *ProjectRepository) AddTaskByEmpID(empID string) (task models.Task, err 
 	return
 }
 
-//AddChildTask persists Task associated with EmpID, TaskID
-func (r *ProjectRepository) AddChildTaskByEmpID(empID string, taskID string) (task models.Task, err error) {
+//AddChildTask persists Task associated with EmpID, TaskID, OrgID
+func (r *ProjectRepository) AddChildTaskByEmpID(orgID string, empID string, taskID string) (task models.Task, err error) {
 	objID := bson.NewObjectId()
 	task.ID = objID
+	task.OrgID = bson.ObjectIdHex(orgID)
 	task.InitiatedBy = bson.ObjectIdHex(empID)
 	task.TaskDependent = bson.ObjectIdHex(taskID)
 	task.CreatedAt = time.Now()
@@ -80,6 +82,18 @@ func (r *ProjectRepository) GetTasksByEmpID(empID string) []models.Task {
 	var tasks []models.Task
 	empid := bson.ObjectIdHex(empID)
 	iter := r.C.Find(bson.M{"empid": empid}).Iter()
+	result := models.Task{}
+	for iter.Next(&result) {
+		tasks = append(tasks, result)
+	}
+	return tasks
+}
+
+//GetTasksByTaskID gets tasks associated with a TaskID
+func (r *ProjectRepository) GetTasksByTaskID(taskID string) []models.Task {
+	var tasks []models.Task
+	taskid := bson.ObjectIdHex(taskID)
+	iter := r.C.Find(bson.M{"taskid": taskid}).Iter()
 	result := models.Task{}
 	for iter.Next(&result) {
 		tasks = append(tasks, result)
@@ -187,9 +201,10 @@ func (r *ProjectRepository) DeleteProjectTaskById(id string) error {
 }
 
 //AddProject persists project associated with MgrID
-func (r *ProjectRepository) AddProjectMgrID(mgrID string, typeID string, projectTaskID string) (project models.Project, err error) {
+func (r *ProjectRepository) AddProjectMgrID(orgID string, mgrID string, typeID string, projectTaskID string) (project models.Project, err error) {
 	objID := bson.NewObjectId()
 	project.ID = objID
+	project.OrgID = bson.ObjectIdHex(orgID)
 	project.Manager = bson.ObjectIdHex(mgrID)
 	project.ProjectTypeID = bson.ObjectIdHex(typeID)
 	project.ProjectTaskID = bson.ObjectIdHex(projectTaskID)

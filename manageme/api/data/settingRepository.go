@@ -116,7 +116,7 @@ func (r *SettingRepository) GetDeptsByOrgID(orgID string) []models.Department {
 	var depts []models.Department
 	orgid := bson.ObjectIdHex(orgID)
 	iter := r.C.Find(bson.M{"orgid": orgid}).Iter()
-	result := models.Deparmtent{}
+	result := models.Department{}
 	for iter.Next(&result) {
 		depts = append(depts, result)
 	}
@@ -124,7 +124,7 @@ func (r *SettingRepository) GetDeptsByOrgID(orgID string) []models.Department {
 }
 
 //EditDeptByID edits dept associated with an ID
-func (r *SettingRepository) EditDepartmentByID(dept *models.Deparmtent) error {
+func (r *SettingRepository) EditDepartmentByID(dept *models.Department) error {
 	err := r.C.Update(bson.M{"_id": dept.ID},
 		bson.M{"$set": bson.M{
 			"name":        dept.Name,
@@ -159,13 +159,13 @@ func (r *SettingRepository) EditBranchByID(branch *models.Branch) error {
 		bson.M{"$set": bson.M{
 			"name":      branch.Name,
 			"updatedat": time.Now(),
-			"status":    dept.Status,
+			"status":    branch.Status,
 		}})
 	return err
 }
 
 //DeleteBranchById deletes branch out of the system by Id
-func (r *SettingRepository) DeleteBrancById(id string) error {
+func (r *SettingRepository) DeleteBranchById(id string) error {
 	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
 	return err
 }

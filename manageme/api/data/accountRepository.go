@@ -253,7 +253,7 @@ func (r *AccountRepository) GetJournalEntriesByOrgID(orgID string) []models.Jour
 }
 
 //GetJournalEntiriesByJAcctID gets entries associated with a JournalAcctID
-func (r *AccountRepository) GetJournalEntriesByJAcctID(orgID string) []models.JournalEntry {
+func (r *AccountRepository) GetJournalEntriesByAcctID(orgID string) []models.JournalEntry {
 	var entries []models.JournalEntry
 	journalaccountid := bson.ObjectIdHex(orgID)
 	iter := r.C.Find(bson.M{"journalaccountid": journalaccountid}).Iter()

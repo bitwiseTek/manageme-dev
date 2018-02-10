@@ -21,9 +21,10 @@ type EmployeeRepository struct {
 }
 
 //AddEmp persists Employee associated with BranchID, DepartmentID, OrgUserID
-func (r *EmployeeRepository) AddEmpByOrgUserID(orgUserID string, branchID string, deptID string) (emp models.Employee, err error) {
+func (r *EmployeeRepository) AddEmpByOrgUserID(orgUserID string, orgID string, branchID string, deptID string) (emp models.Employee, err error) {
 	objID := bson.NewObjectId()
 	emp.ID = objID
+	emp.OrgID = bson.ObjectIdHex(orgID)
 	emp.OrgUserID = bson.ObjectIdHex(orgUserID)
 	emp.BranchID = bson.ObjectIdHex(branchID)
 	emp.DepartmentID = bson.ObjectIdHex(deptID)
@@ -34,9 +35,10 @@ func (r *EmployeeRepository) AddEmpByOrgUserID(orgUserID string, branchID string
 }
 
 //AddEmp persists Employee associated with BranchID, DepartmentID, OrgUserID, EmpID
-func (r *EmployeeRepository) AddChildEmpByOrgUserID(orgUserID string, branchID string, deptID string, empID string) (emp models.Employee, err error) {
+func (r *EmployeeRepository) AddChildEmpByOrgUserID(orgUserID string, orgID string, branchID string, deptID string, empID string) (emp models.Employee, err error) {
 	objID := bson.NewObjectId()
 	emp.ID = objID
+	emp.OrgID = bson.ObjectIdHex(orgID)
 	emp.OrgUserID = bson.ObjectIdHex(orgUserID)
 	emp.BranchID = bson.ObjectIdHex(branchID)
 	emp.DepartmentID = bson.ObjectIdHex(deptID)
@@ -64,8 +66,14 @@ func (r *EmployeeRepository) GetEmpByID(id string) (emp models.Employee, err err
 	return
 }
 
+//GetEmpByUserID gets employee associated with a UserID
+func (r *EmployeeRepository) GetEmpByUserID(orgUserID string) (emp models.Employee, err error) {
+	err = r.C.Find(bson.ObjectIdHex(orgUserID)).One(&emp)
+	return
+}
+
 //GetEmpsByOrgID gets emps associated with an OrgID
-func (r *EmployeeRepository) GetEmpsByOrgUserID(orgID string) []models.Employee {
+func (r *EmployeeRepository) GetEmpsByOrgID(orgID string) []models.Employee {
 	var emps []models.Employee
 	orgid := bson.ObjectIdHex(orgID)
 	iter := r.C.Find(bson.M{"orgid": orgid}).Iter()
@@ -104,7 +112,7 @@ func (r *EmployeeRepository) GetEmpsByBranchID(branchID string) []models.Employe
 func (r *EmployeeRepository) GetEmpsByMgrID(mgrID string) []models.Employee {
 	var emps []models.Employee
 	mgrid := bson.ObjectIdHex(mgrID)
-	iter := r.C.Find(bson.M{"mgrid": mgrid}).Iter()
+	iter := r.C.Find(bson.M{"empid": mgrid}).Iter()
 	result := models.Employee{}
 	for iter.Next(&result) {
 		emps = append(emps, result)
@@ -116,33 +124,33 @@ func (r *EmployeeRepository) GetEmpsByMgrID(mgrID string) []models.Employee {
 func (r *EmployeeRepository) EditEmpByID(emp *models.Employee) error {
 	err := r.C.Update(bson.M{"_id": emp.ID},
 		bson.M{"$set": bson.M{
-			"joiningdate": 					emp.JoiningDate,
-			"employmenttype":  	 			emp.EmploymentType,
-			"scheduledconfirmationdate":    emp.ScheduledConfirmationDate,
-			"finalconfirmationdate":	  	emp.FinalConfirmationDate,
-			"contractenddate":				emp.ContractEndDate,
-			"retirementdate":				emp.RetirementDate,
-			"status":				  		emp.Status,
-			"bankname":			  			emp.BankName,
-			"bankaccount":				  	emp.BankAccount,
-			"firstname":				  	emp.FirstName,
-			"lastname":				  		emp.LastName,
-			"middlename":				  	emp.MiddleName,
-			"addresspermanent":			 	emp.AddressPermanent,
-			"addresscurrent":				emp.AddressCurrent,
-			"emailpersonal":				emp.EmailPersonal,
-			"emailcompany":				  	emp.EmailCompany,
-			"image":				  		emp.Image,
-			"accommodationtype":		  	emp.AccommodationType,
-			"primaryphone":				  	emp.PrimaryPhone,
-			"secondaryphone":				emp.SecondaryPhone,
-			"emfullname":				  	emp.EmFullName,
-			"emaddress":				  	emp.EmAddress,
-			"ememail":				  		emp.EmEmail,
-			"emrelationshiptype":		  	emp.EmRelationshipType,
-			"emaccommodationtype":		  	emp.EmAccommodationType,
-			"emphone":				  		emp.EmPhone,
-			"updatedat":              		time.Now(),
+			"joiningdate":               emp.JoiningDate,
+			"employmenttype":            emp.EmploymentType,
+			"scheduledconfirmationdate": emp.ScheduledConfirmationDate,
+			"finalconfirmationdate":     emp.FinalConfirmationDate,
+			"contractenddate":           emp.ContractEndDate,
+			"retirementdate":            emp.RetirementDate,
+			"status":                    emp.Status,
+			"bankname":                  emp.BankName,
+			"bankaccount":               emp.BankAccount,
+			"firstname":                 emp.FirstName,
+			"lastname":                  emp.LastName,
+			"middlename":                emp.MiddleName,
+			"addresspermanent":          emp.AddressPermanent,
+			"addresscurrent":            emp.AddressCurrent,
+			"emailpersonal":             emp.EmailPersonal,
+			"emailcompany":              emp.EmailCompany,
+			"image":                     emp.Image,
+			"accommodationtype":         emp.AccommodationType,
+			"primaryphone":              emp.PrimaryPhone,
+			"secondaryphone":            emp.SecondaryPhone,
+			"emfullname":                emp.EmFullName,
+			"emaddress":                 emp.EmAddress,
+			"ememail":                   emp.EmEmail,
+			"emrelationshiptype":        emp.EmRelationshipType,
+			"emaccommodationtype":       emp.EmAccommodationType,
+			"emphone":                   emp.EmPhone,
+			"updatedat":                 time.Now(),
 		}})
 	return err
 }
@@ -155,42 +163,42 @@ func (r *EmployeeRepository) DeleteByEmpById(id string) error {
 
 //EditEmpByUserID edits emp associated with a UserID
 func (r *EmployeeRepository) EditEmpByUserID(emp *models.Employee) error {
-	err := r.C.Update(bson.M{"userid": emp.UserID},
+	err := r.C.Update(bson.M{"userid": emp.OrgUserID},
 		bson.M{"$set": bson.M{
-			"joiningdate": 					emp.JoiningDate,
-			"employmenttype":  	 			emp.EmploymentType,
-			"scheduledconfirmationdate":    emp.ScheduledConfirmationDate,
-			"finalconfirmationdate":	  	emp.FinalConfirmationDate,
-			"contractenddate":				emp.ContractEndDate,
-			"retirementdate":				emp.RetirementDate,
-			"status":				  		emp.Status,
-			"bankname":			  			emp.BankName,
-			"bankaccount":				  	emp.BankAccount,
-			"firstname":				  	emp.FirstName,
-			"lastname":				  		emp.LastName,
-			"middlename":				  	emp.MiddleName,
-			"addresspermanent":			 	emp.AddressPermanent,
-			"addresscurrent":				emp.AddressCurrent,
-			"emailpersonal":				emp.EmailPersonal,
-			"emailcompany":				  	emp.EmailCompany,
-			"image":				  		emp.Image,
-			"accommodationtype":		  	emp.AccommodationType,
-			"primaryphone":				  	emp.PrimaryPhone,
-			"secondaryphone":				emp.SecondaryPhone,
-			"emfullname":				  	emp.EmFullName,
-			"emaddress":				  	emp.EmAddress,
-			"ememail":				  		emp.EmEmail,
-			"emrelationshiptype":		  	emp.EmRelationshipType,
-			"emaccommodationtype":		  	emp.EmAccommodationType,
-			"emphone":				  		emp.EmPhone,
-			"updatedat":              		time.Now(),
+			"joiningdate":               emp.JoiningDate,
+			"employmenttype":            emp.EmploymentType,
+			"scheduledconfirmationdate": emp.ScheduledConfirmationDate,
+			"finalconfirmationdate":     emp.FinalConfirmationDate,
+			"contractenddate":           emp.ContractEndDate,
+			"retirementdate":            emp.RetirementDate,
+			"status":                    emp.Status,
+			"bankname":                  emp.BankName,
+			"bankaccount":               emp.BankAccount,
+			"firstname":                 emp.FirstName,
+			"lastname":                  emp.LastName,
+			"middlename":                emp.MiddleName,
+			"addresspermanent":          emp.AddressPermanent,
+			"addresscurrent":            emp.AddressCurrent,
+			"emailpersonal":             emp.EmailPersonal,
+			"emailcompany":              emp.EmailCompany,
+			"image":                     emp.Image,
+			"accommodationtype":         emp.AccommodationType,
+			"primaryphone":              emp.PrimaryPhone,
+			"secondaryphone":            emp.SecondaryPhone,
+			"emfullname":                emp.EmFullName,
+			"emaddress":                 emp.EmAddress,
+			"ememail":                   emp.EmEmail,
+			"emrelationshiptype":        emp.EmRelationshipType,
+			"emaccommodationtype":       emp.EmAccommodationType,
+			"emphone":                   emp.EmPhone,
+			"updatedat":                 time.Now(),
 		}})
 	return err
 }
 
 //DeleteEmpByUserId deletes emp out of the system by a UserId
 func (r *EmployeeRepository) DeleteByEmpByUserId(id string) error {
-	err := r.C.Remove(bson.M{"userid": bson.ObjectIdHex(id)})
+	err := r.C.Remove(bson.M{"orguserid": bson.ObjectIdHex(id)})
 	return err
 }
 
@@ -251,6 +259,12 @@ func (r *EmployeeRepository) GetBioByID(id string) (bio models.Biodata, err erro
 	return
 }
 
+//GetBioByEmpID gets biodata associated with an EmpID
+func (r *EmployeeRepository) GetBioByEmpID(empID string) (bio models.Biodata, err error) {
+	err = r.C.Find(bson.ObjectIdHex(empID)).One(&bio)
+	return
+}
+
 //GetBiosByEmpID gets bios associated with an EmpID
 func (r *EmployeeRepository) GetBiosByEmpID(empID string) []models.Biodata {
 	var bios []models.Biodata
@@ -265,15 +279,15 @@ func (r *EmployeeRepository) GetBiosByEmpID(empID string) []models.Biodata {
 
 //EditBioByEmpID edits bio associated with an EmpID
 func (r *EmployeeRepository) EditBiodataByEmpID(bio *models.Biodata) error {
-	err := r.C.Update(bson.M{"empid": bio.EmpID},
+	err := r.C.Update(bson.M{"empid": bio.EmployeeID},
 		bson.M{"$set": bson.M{
-			"dateofbirth": 			bio.DateOfBirth,
-			"sex":  	 			bio.Sex,
-			"bloodgroup":    		bio.BloodGroup,
-			"maritalstatus":	  	bio.MaritalStatus,
-			"disabilitytype":		bio.DisabilityType,
-			"nationality":			bio.Nationality,
-			"stateoforigin":  		bio.StateOfOrigin,
+			"dateofbirth":    bio.DateOfBirth,
+			"sex":            bio.Sex,
+			"bloodgroup":     bio.BloodGroup,
+			"maritalstatus":  bio.MaritalStatus,
+			"disabilitytype": bio.DisabilityType,
+			"nationality":    bio.Nationality,
+			"stateoforigin":  bio.StateOfOrigin,
 		}})
 	return err
 }
@@ -288,13 +302,13 @@ func (r *EmployeeRepository) DeleteBiodataByEmpId(id string) error {
 func (r *EmployeeRepository) EditBiodataByID(bio *models.Biodata) error {
 	err := r.C.Update(bson.M{"_id": bio.ID},
 		bson.M{"$set": bson.M{
-			"dateofbirth": 			bio.DateOfBirth,
-			"sex":  	 			bio.Sex,
-			"bloodgroup":    		bio.BloodGroup,
-			"maritalstatus":	  	bio.MaritalStatus,
-			"disabilitytype":		bio.DisabilityType,
-			"nationality":			bio.Nationality,
-			"stateoforigin":  		bio.StateOfOrigin,
+			"dateofbirth":    bio.DateOfBirth,
+			"sex":            bio.Sex,
+			"bloodgroup":     bio.BloodGroup,
+			"maritalstatus":  bio.MaritalStatus,
+			"disabilitytype": bio.DisabilityType,
+			"nationality":    bio.Nationality,
+			"stateoforigin":  bio.StateOfOrigin,
 		}})
 	return err
 }
@@ -317,7 +331,7 @@ func (r *EmployeeRepository) GetPIDByBioID(bioID string) (pid models.PersonalIde
 	return
 }
 
-//GetPIDByBioID gets pids associated with a BioID
+//GetPIDsByBioID gets pids associated with a BioID
 func (r *EmployeeRepository) GetPIDssByBioID(bioID string) []models.PersonalIdentification {
 	var pids []models.PersonalIdentification
 	bioid := bson.ObjectIdHex(bioID)
@@ -330,15 +344,29 @@ func (r *EmployeeRepository) GetPIDssByBioID(bioID string) []models.PersonalIden
 }
 
 //EditPIDByBioID edits PID associated with a BioID
-func (r *EmployeeRepository) EditPIDByBioID(pid *models.PID) error {
+func (r *EmployeeRepository) EditPIDByBioID(pid *models.PersonalIdentification) error {
 	err := r.C.Update(bson.M{"bioid": pid.BioID},
 		bson.M{"$set": bson.M{
-			"attachments": 			pid.Attachments,
-			"idtype":  	 			pid.IdType,
-			"idno":    				pid.IdNo,
-			"validtill":	  		pid.ValidTill,
-			"issueplace":			pid.IssuePlace,
-			"issuedate":			pid.IssueDate,
+			"attachments": pid.Attachments,
+			"idtype":      pid.IDType,
+			"idno":        pid.IDNo,
+			"validtill":   pid.ValidTill,
+			"issueplace":  pid.IssuePlace,
+			"issuedate":   pid.IssueDate,
+		}})
+	return err
+}
+
+//EditPIDByID edits PID associated with an ID
+func (r *EmployeeRepository) EditPIDByID(pid *models.PersonalIdentification) error {
+	err := r.C.Update(bson.M{"_id": pid.ID},
+		bson.M{"$set": bson.M{
+			"attachments": pid.Attachments,
+			"idtype":      pid.IDType,
+			"idno":        pid.IDNo,
+			"validtill":   pid.ValidTill,
+			"issueplace":  pid.IssuePlace,
+			"issuedate":   pid.IssueDate,
 		}})
 	return err
 }
@@ -371,12 +399,26 @@ func (r *EmployeeRepository) GetEdusByBioID(bioID string) []models.Education {
 func (r *EmployeeRepository) EditEduByBioID(edu *models.Education) error {
 	err := r.C.Update(bson.M{"bioid": edu.BioID},
 		bson.M{"$set": bson.M{
-			"attachments": 			edu.Attachments,
-			"qualification":  	 	edu.Qualification,
-			"cgpa":    				edu.CGPA,
-			"graduatedon":	  		edu.GraduatedOn,
-			"schoolattended":		edu.SchoolAttended,
-			"honortype":			edu.HonorType,
+			"attachments":    edu.Attachments,
+			"qualification":  edu.Qualification,
+			"cgpa":           edu.CGPA,
+			"graduatedon":    edu.GraduatedOn,
+			"schoolattended": edu.SchoolAttended,
+			"honortype":      edu.HonorType,
+		}})
+	return err
+}
+
+//EditEduByID edits Edu associated with an ID
+func (r *EmployeeRepository) EditEduByID(edu *models.Education) error {
+	err := r.C.Update(bson.M{"_id": edu.ID},
+		bson.M{"$set": bson.M{
+			"attachments":    edu.Attachments,
+			"qualification":  edu.Qualification,
+			"cgpa":           edu.CGPA,
+			"graduatedon":    edu.GraduatedOn,
+			"schoolattended": edu.SchoolAttended,
+			"honortype":      edu.HonorType,
 		}})
 	return err
 }
@@ -409,13 +451,28 @@ func (r *EmployeeRepository) GetWorkByBioID(bioID string) (work models.WorkExper
 func (r *EmployeeRepository) EditWorkByBioID(work *models.WorkExperience) error {
 	err := r.C.Update(bson.M{"bioid": work.BioID},
 		bson.M{"$set": bson.M{
-			"attachments": 			work.Attachments,
-			"companyworked":  	 	work.CompanyWorked,
-			"workhistoryext":    	work.WorkHistoryExt,
-			"designation":	  		work.Designation,
-			"resignedon":			work.ResignedOn,
-			"address":				work.Address,
-			"salary":				work.Salary,
+			"attachments":    work.Attachments,
+			"companyworked":  work.CompanyWorked,
+			"workhistoryext": work.WorkHistoryExt,
+			"designation":    work.Designation,
+			"resignedon":     work.ResignedOn,
+			"address":        work.Address,
+			"salary":         work.Salary,
+		}})
+	return err
+}
+
+//EditWorkByID edits work associated with an ID
+func (r *EmployeeRepository) EditWorkByID(work *models.WorkExperience) error {
+	err := r.C.Update(bson.M{"_id": work.ID},
+		bson.M{"$set": bson.M{
+			"attachments":    work.Attachments,
+			"companyworked":  work.CompanyWorked,
+			"workhistoryext": work.WorkHistoryExt,
+			"designation":    work.Designation,
+			"resignedon":     work.ResignedOn,
+			"address":        work.Address,
+			"salary":         work.Salary,
 		}})
 	return err
 }
@@ -445,16 +502,29 @@ func (r *EmployeeRepository) GetHealthDetailByBioID(bioID string) (health models
 }
 
 //EditHealthByBioID edits health detail associated with a BioID
-func (r *EmployeeRepository) EditHealthByBioID(work *models.HealthDetail) error {
+func (r *EmployeeRepository) EditHealthByBioID(health *models.HealthDetail) error {
 	err := r.C.Update(bson.M{"bioid": health.BioID},
 		bson.M{"$set": bson.M{
-			"attachments": 			health.Attachments,
-			"height":  	 			health.CompanyWorked,
-			"weight":    			health.WorkHistoryExt,
-			"eyecolor":	  			health.Designation,
-			"knownallergies":		health.ResignedOn,
-			"eyecolor":				health.Address,
-			"healthconcerns":		health.Salary,
+			"attachments":    health.Attachments,
+			"height":         health.Height,
+			"weight":         health.Weight,
+			"eyecolor":       health.EyeColor,
+			"knownallergies": health.KnownAllergies,
+			"healthconcerns": health.HealthConcerns,
+		}})
+	return err
+}
+
+//EditHealthByID edits health detail associated with an ID
+func (r *EmployeeRepository) EditHealthByID(health *models.HealthDetail) error {
+	err := r.C.Update(bson.M{"_id": health.ID},
+		bson.M{"$set": bson.M{
+			"attachments":    health.Attachments,
+			"height":         health.Height,
+			"weight":         health.Weight,
+			"eyecolor":       health.EyeColor,
+			"knownallergies": health.KnownAllergies,
+			"healthconcerns": health.HealthConcerns,
 		}})
 	return err
 }
@@ -598,28 +668,28 @@ func (r *EmployeeRepository) GetClaimsByOrgID(orgID string) []models.ExpenseClai
 
 //EditClaimsByEmpID edits claim associated with an EmpID
 func (r *EmployeeRepository) EditClaimByEmpID(claim *models.ExpenseClaim) error {
-	err := r.C.Update(bson.M{"empid": claim.ExpenseApplier},
+	err := r.C.Update(bson.M{"empid": claim.ExpApplier},
 		bson.M{"$set": bson.M{
-			"description": 			claim.Description,
-			"claimamount":  	 	claim.ClaimAmount,
-			"remarks":    			claim.Remarks,
-			"expensedate":			claim.ExpenseDate,
-			"updatedat":	  		time.Now(),
+			"description": claim.Description,
+			"claimamount": claim.ClaimAmount,
+			"remarks":     claim.Remarks,
+			"expensedate": claim.ExpenseDate,
+			"updatedat":   time.Now(),
 		}})
 	return err
 }
 
 //EditClaimsByMgrID edits claim associated with a MgrID
 func (r *EmployeeRepository) EditClaimByMgrID(claim *models.ExpenseClaim) error {
-	err := r.C.Update(bson.M{"mgrid": claim.ExpenseApprover},
+	err := r.C.Update(bson.M{"mgrid": claim.ExpApprover},
 		bson.M{"$set": bson.M{
-			"ispaid": 					claim.Description,
-			"approvalstatus":  	 		claim.ClaimAmount,
-			"totalsanctionedamount":   	claim.Remarks,
-			"paymentmode":				claim.PaymentMode,
-			"status":					claim.Status,
-			"sanctionedamount":			claim.SanctionedAmount,
-			"updatedat":	  			time.Now(),
+			"ispaid":                claim.Description,
+			"approvalstatus":        claim.ClaimAmount,
+			"totalsanctionedamount": claim.Remarks,
+			"paymentmode":           claim.PaymentMode,
+			"status":                claim.Status,
+			"sanctionedamount":      claim.SanctionedAmount,
+			"updatedat":             time.Now(),
 		}})
 	return err
 }
@@ -658,10 +728,10 @@ func (r *EmployeeRepository) GetAllocationsByOrgID(orgID string) []models.LeaveA
 func (r *EmployeeRepository) EditLeaveAllocationByID(leave *models.LeaveAllocation) error {
 	err := r.C.Update(bson.M{"_id": leave.ID},
 		bson.M{"$set": bson.M{
-			"description": 		leave.Description,
-			"fromdate":  	 	leave.FromDate,
-			"todate":    		leave.ToDate,
-			"updatedat":  		time.Now(),
+			"description": leave.Description,
+			"fromdate":    leave.FromDate,
+			"todate":      leave.ToDate,
+			"updatedat":   time.Now(),
 		}})
 	return err
 }
@@ -678,8 +748,8 @@ func (r *EmployeeRepository) GetLeaveApplicationByID(id string) (leaveApp models
 	return
 }
 
-//GetLeaveApplicationsByMgrID gets leave allocations associated with a MgrID
-func (r *EmployeeRepository) GetApplicationsByMgrID(mgrID string) []models.LeaveApplication {
+//GetLeaveApplicationsByMgrID gets leave applications associated with a MgrID
+func (r *EmployeeRepository) GetLeaveApplicationsByMgrID(mgrID string) []models.LeaveApplication {
 	var apps []models.LeaveApplication
 	mgrid := bson.ObjectIdHex(mgrID)
 	iter := r.C.Find(bson.M{"mgrid": mgrid}).Iter()
@@ -690,8 +760,8 @@ func (r *EmployeeRepository) GetApplicationsByMgrID(mgrID string) []models.Leave
 	return apps
 }
 
-//GetLeaveApplicationsByOrgID gets leave allocations associated with a OrgID
-func (r *EmployeeRepository) GetApplicationsByOrgID(orgID string) []models.LeaveApplication {
+//GetLeaveApplicationsByOrgID gets leave applications associated with a OrgID
+func (r *EmployeeRepository) GetLeaveApplicationsByOrgID(orgID string) []models.LeaveApplication {
 	var apps []models.LeaveApplication
 	orgid := bson.ObjectIdHex(orgID)
 	iter := r.C.Find(bson.M{"orgid": orgid}).Iter()
@@ -718,10 +788,10 @@ func (r *EmployeeRepository) GetApplicationsByEmpID(empID string) []models.Leave
 func (r *EmployeeRepository) EditLeaveApplicationByID(leave *models.LeaveApplication) error {
 	err := r.C.Update(bson.M{"_id": leave.ID},
 		bson.M{"$set": bson.M{
-			"description": 		leave.Description,
-			"fromdate":  	 	leave.FromDate,
-			"todate":    		leave.ToDate,
-			"updatedat":  		time.Now(),
+			"description": leave.Description,
+			"fromdate":    leave.FromDate,
+			"todate":      leave.ToDate,
+			"updatedat":   time.Now(),
 		}})
 	return err
 }
@@ -754,11 +824,11 @@ func (r *EmployeeRepository) GetBlockListsByOrgID(orgID string) []models.LeaveBl
 func (r *EmployeeRepository) EditLeaveBlockListByID(blk *models.LeaveBlockList) error {
 	err := r.C.Update(bson.M{"_id": blk.ID},
 		bson.M{"$set": bson.M{
-			"name": 		blk.Name,
-			"blockdate":  	blk.BlockDate,
-			"reason":    	blk.Reason,
-			"applyall":		blk.ApplyAll,
-			"updatedat":  	time.Now(),
+			"name":      blk.Name,
+			"blockdate": blk.BlockDate,
+			"reason":    blk.Reason,
+			"applyall":  blk.ApplyAll,
+			"updatedat": time.Now(),
 		}})
 	return err
 }
@@ -791,12 +861,12 @@ func (r *EmployeeRepository) GetHolidayListsByOrgID(orgID string) []models.Holid
 func (r *EmployeeRepository) EditHolidayListByID(hol *models.HolidayList) error {
 	err := r.C.Update(bson.M{"_id": hol.ID},
 		bson.M{"$set": bson.M{
-			"name": 		hol.Name,
-			"fromdate":  	hol.FromDate,
-			"todate":    	hol.ToDate,
-			"weeklyoff":	hol.WeeklyOff,
-			"description":	hol.Description,
-			"holidaydate":  hol.HolidayDate,
+			"name":        hol.Name,
+			"fromdate":    hol.FromDate,
+			"todate":      hol.ToDate,
+			"weeklyoff":   hol.WeeklyOff,
+			"description": hol.Description,
+			"holidaydate": hol.HolidayDate,
 		}})
 	return err
 }
@@ -839,17 +909,17 @@ func (r *EmployeeRepository) GetAppraisalsByOrgID(orgID string) []models.Apprais
 
 //EditAppraisalByID edits appraisal associated with an ID
 func (r *EmployeeRepository) EditAppraisalByID(app *models.Appraisal) error {
-	err := r.C.Update(bson.M{"_id": blk.ID},
+	err := r.C.Update(bson.M{"_id": app.ID},
 		bson.M{"$set": bson.M{
-			"stardate": 	app.StartDate,
-			"enddate":  	app.EndDate,
-			"remarks":    	app.Remarks,
-			"title":		app.Title,
+			"stardate":     app.StartDate,
+			"enddate":      app.EndDate,
+			"remarks":      app.Remarks,
+			"title":        app.Title,
 			"description":  app.Description,
-			"kra":			app.KRA, 
-			"perweightage":	app.PerWeightage, 
-			"score":		app.Score, 
-			"status":		app.Status,
+			"kra":          app.KRA,
+			"perweightage": app.PerWeightage,
+			"score":        app.Score,
+			"status":       app.Status,
 		}})
 	return err
 }
@@ -892,16 +962,16 @@ func (r *EmployeeRepository) GetExitsByOrgID(orgID string) []models.Exit {
 
 //EditExitByID edits exit associated with an ID
 func (r *EmployeeRepository) EditExitByID(ex *models.Exit) error {
-	err := r.C.Update(bson.M{"_id": exit.ID},
+	err := r.C.Update(bson.M{"_id": ex.ID},
 		bson.M{"$set": bson.M{
-			"leavingreason":  			ex.LeavingReason,
-			"relievingdate":    		ex.RelievingDate,
-			"leaveencashed":			ex.LeaveEncashed,
-			"encashmentdate":  			ex.EncashmentDate,
-			"interviewdate":			ex.InterviewDate, 
-			"resignationreason":		ex.ResignationReason, 
-			"newworkplace":				ex.NewWorkPlace, 
-			"feedback":					ex.Feedback,
+			"leavingreason":     ex.LeavingReason,
+			"relievingdate":     ex.RelievingDate,
+			"leaveencashed":     ex.LeaveEncashed,
+			"encashmentdate":    ex.EncashmentDate,
+			"interviewdate":     ex.InterviewDate,
+			"resignationreason": ex.ResignationReason,
+			"newworkplace":      ex.NewWorkPlace,
+			"feedback":          ex.Feedback,
 		}})
 	return err
 }
@@ -1020,9 +1090,10 @@ func (r *EmployeeRepository) AddSalarySlipByEmpID(orgID string, empID string, mg
 }
 
 //AddActivityCostByEmpID persists activity cost associated with EmpID
-func (r *EmployeeRepository) AddActivityCostByOrgID(typeID string, empID string) (cost models.ActivityCost, err error) {
+func (r *EmployeeRepository) AddActivityCostByOrgID(orgID string, typeID string, empID string) (cost models.ActivityCost, err error) {
 	objID := bson.NewObjectId()
 	cost.ID = objID
+	cost.OrgID = bson.ObjectIdHex(orgID)
 	cost.EmployeeID = bson.ObjectIdHex(empID)
 	cost.ActivityType = bson.ObjectIdHex(typeID)
 
@@ -1048,6 +1119,17 @@ func (r *EmployeeRepository) GetSalaryComponentsByOrgID(orgID string) []models.S
 	return components
 }
 
+//EditSalaryComponentByID edits salary component associated with an ID
+func (r *EmployeeRepository) EditSalaryComponentByID(sal *models.SalaryComponent) error {
+	err := r.C.Update(bson.M{"_id": sal.ID},
+		bson.M{"$set": bson.M{
+			"name": 		   sal.Name,
+			"type":   		   sal.Type,
+			"description":     sal.Description,
+		}})
+	return err
+}
+
 //GetSalaryEmployeeByID gets salary employee associated with an ID
 func (r *EmployeeRepository) GetSalaryEmployeeByID(id string) (sal models.SalaryEmployee, err error) {
 	err = r.C.Find(bson.ObjectIdHex(id)).One(&sal)
@@ -1063,7 +1145,7 @@ func (r *EmployeeRepository) GetSalaryEmployeesByOrgID(orgID string) []models.Sa
 	for iter.Next(&result) {
 		employees := result.Employees
 		for _, e := range employees {
-			e = append(e, result)
+			//e = append(e, result)
 		}
 	}
 	return salEmployees
@@ -1073,10 +1155,10 @@ func (r *EmployeeRepository) GetSalaryEmployeesByOrgID(orgID string) []models.Sa
 func (r *EmployeeRepository) EditSalaryEmployeeByID(sal *models.SalaryEmployee) error {
 	err := r.C.Update(bson.M{"_id": sal.ID},
 		bson.M{"$set": bson.M{
-			"fromdate": 	sal.FromDate,
-			"todate":  		sal.ToDate,
-			"base":    		sal.Base,
-			"variable":		sal.Variable,
+			"fromdate": sal.FromDate,
+			"todate":   sal.ToDate,
+			"base":     sal.Base,
+			"variable": sal.Variable,
 		}})
 	return err
 }
@@ -1087,11 +1169,22 @@ func (r *EmployeeRepository) DeleteSalaryEmployeeById(id string) error {
 	return err
 }
 
-
 //GetSalaryStructureByID gets salary structure associated with an ID
 func (r *EmployeeRepository) GetSalaryStructureByID(id string) (sal models.SalaryStructure, err error) {
 	err = r.C.Find(bson.ObjectIdHex(id)).One(&sal)
 	return
+}
+
+//GetSalaryStructuresByOrgID gets salary structures associated with an EmpID
+func (r *EmployeeRepository) GetSalaryStructuresByOrgID(orgID string) []models.SalaryStructure {
+	var structures []models.SalaryStructure
+	orgid := bson.ObjectIdHex(orgID)
+	iter := r.C.Find(bson.M{"orgid": orgid}).Iter()
+	result := models.SalaryStructure{}
+	for iter.Next(&result) {
+		structures = append(structures, result)
+	}
+	return structures
 }
 
 //GetSalaryStructuresByOrgID gets salary structures associated with an EmpID
@@ -1122,16 +1215,16 @@ func (r *EmployeeRepository) GetSalaryStructuresByAcctID(acctID string) []models
 func (r *EmployeeRepository) EditSalaryStructureByID(sal *models.SalaryStructure) error {
 	err := r.C.Update(bson.M{"_id": sal.ID},
 		bson.M{"$set": bson.M{
-			"payrollfrequency": 		sal.PayrollFrequency,
-			"isactive":  				sal.IsActive,
-			"isdefault":    			sal.IsDefault,
-			"hourrate":					sal.HourRate,
-			"paymentmode":  			sal.PaymentMode,
-			"isamountformulabased":		sal.IsAmountFormulaBased, 
-			"isamountlwpbased":			sal.IsLAmountwpBased, 
-			"defaultamount":			sal.DefaultAmount, 
-			"amount":					sal.Amount,
-			"updatedat":				time.Now(),
+			"payrollfrequency":     sal.PayrollFrequency,
+			"isactive":             sal.IsActive,
+			"isdefault":            sal.IsDefault,
+			"hourrate":             sal.HourRate,
+			"paymentmode":          sal.PaymentMode,
+			"isamountformulabased": sal.IsAmountFormulaBased,
+			"isamountlwpbased":     sal.IsAmountLwpBased,
+			"defaultamount":        sal.DefaultAmount,
+			"amount":               sal.Amount,
+			"updatedat":            time.Now(),
 		}})
 	return err
 }
@@ -1141,7 +1234,6 @@ func (r *EmployeeRepository) DeleteSalaryStructureById(id string) error {
 	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
 	return err
 }
-
 
 //GetActivityTypeByID gets activity type associated with an ID
 func (r *EmployeeRepository) GetActivityTypeByID(id string) (actType models.ActivityType, err error) {
@@ -1165,11 +1257,11 @@ func (r *EmployeeRepository) GetActivityTypesByOrgID(orgID string) []models.Acti
 func (r *EmployeeRepository) EditActivityTypeByID(actType *models.ActivityType) error {
 	err := r.C.Update(bson.M{"_id": actType.ID},
 		bson.M{"$set": bson.M{
-			"name": 		actType.Name,
-			"billingrate":  actType.BillingRate,
-			"costingrate":  actType.CostingRate,
-			"disabled":		actType.Disabled,
-			"updatedat":  	time.Now(),
+			"name":        actType.Name,
+			"billingrate": actType.BillingRate,
+			"costingrate": actType.CostingRate,
+			"disabled":    actType.Disabled,
+			"updatedat":   time.Now(),
 		}})
 	return err
 }
@@ -1202,9 +1294,9 @@ func (r *EmployeeRepository) GetWorkingHoursByOrgID(orgID string) []models.Worki
 func (r *EmployeeRepository) EditWorkingHourByID(work *models.WorkingHour) error {
 	err := r.C.Update(bson.M{"_id": work.ID},
 		bson.M{"$set": bson.M{
-			"starttime": 	work.StartTime,
-			"endtime":  	work.EndTime,
-			"enabled":    	work.Enabled,
+			"starttime": work.StartTime,
+			"endtime":   work.EndTime,
+			"enabled":   work.Enabled,
 		}})
 	return err
 }
@@ -1214,7 +1306,6 @@ func (r *EmployeeRepository) DeleteWorkingHourById(id string) error {
 	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
 	return err
 }
-
 
 //GetOperationByID gets operation associated with an ID
 func (r *EmployeeRepository) GetOperationByID(id string) (op models.Operation, err error) {
@@ -1238,7 +1329,7 @@ func (r *EmployeeRepository) GetOperationsByOrgID(orgID string) []models.Operati
 func (r *EmployeeRepository) EditOperationByID(op *models.Operation) error {
 	err := r.C.Update(bson.M{"_id": op.ID},
 		bson.M{"$set": bson.M{
-			"description": 	op.Description,
+			"description": op.Description,
 		}})
 	return err
 }
@@ -1248,7 +1339,6 @@ func (r *EmployeeRepository) DeleteOperationById(id string) error {
 	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
 	return err
 }
-
 
 //GetWorkstationByID gets workstation associated with an ID
 func (r *EmployeeRepository) GetWorkstationByID(id string) (work models.Workstation, err error) {
@@ -1272,13 +1362,13 @@ func (r *EmployeeRepository) GetWorkstationsByOrgID(orgID string) []models.Works
 func (r *EmployeeRepository) EditWorkstationByID(work *models.Workstation) error {
 	err := r.C.Update(bson.M{"_id": work.ID},
 		bson.M{"$set": bson.M{
-			"name": 					work.Name,
-			"description":  			work.Description,
-			"hourrate":    				work.HourRate,
-			"hourrateelectricity":		work.HourRateElectricity,
-			"hourraterent":  			work.HourRateRent,
-			"hourratelabor":			work.HourRateLabor, 
-			"hourrateconsumable":		work.HourRateConsumable,
+			"name":                work.Name,
+			"description":         work.Description,
+			"hourrate":            work.HourRate,
+			"hourrateelectricity": work.HourRateElectricity,
+			"hourraterent":        work.HourRateRent,
+			"hourratelabor":       work.HourRateLabor,
+			"hourrateconsumable":  work.HourRateConsumable,
 		}})
 	return err
 }
@@ -1288,7 +1378,6 @@ func (r *EmployeeRepository) DeleteWorkstationById(id string) error {
 	err := r.C.Remove(bson.M{"_id": bson.ObjectIdHex(id)})
 	return err
 }
-
 
 //GetTimesheetByID gets timesheet associated with an ID
 func (r *EmployeeRepository) GetTimesheetByID(id string) (time models.Timesheet, err error) {
@@ -1333,21 +1422,21 @@ func (r *EmployeeRepository) GetTimesheetsByMgrID(mgrID string) []models.Timeshe
 }
 
 //EditTimesheetByID edits timesheet associated with an ID
-func (r *EmployeeRepository) EditTimesheetByID(time *models.Timesheet) error {
-	err := r.C.Update(bson.M{"_id": time.ID},
+func (r *EmployeeRepository) EditTimesheetByID(timeSheet *models.Timesheet) error {
+	err := r.C.Update(bson.M{"_id": timeSheet.ID},
 		bson.M{"$set": bson.M{
-			"stardate": 		time.StartDate,
-			"enddate":  		time.EndDate,
-			"fromtime":    		time.FromTime,
-			"totime":			time.ToTime,
-			"completedqty":  	time.CompletedQty,
-			"hours":			time.Hours, 
-			"billable":			time.Billable, 
-			"billinghours":		time.BillingHours, 
-			"billingamount":	time.BillingAmount,
-			"costingamount":	time.CostingAmount,
-			"note":				time.Note,
-			"updatedat":		time.Now(),
+			"stardate":      timeSheet.StartDate,
+			"enddate":       timeSheet.EndDate,
+			"fromtime":      timeSheet.FromTime,
+			"totime":        timeSheet.ToTime,
+			"completedqty":  timeSheet.CompletedQty,
+			"hours":         timeSheet.Hours,
+			"billable":      timeSheet.Billable,
+			"billinghours":  timeSheet.BillingHours,
+			"billingamount": timeSheet.BillingAmount,
+			"costingamount": timeSheet.CostingAmount,
+			"note":          timeSheet.Note,
+			"updatedat":     time.Now(),
 		}})
 	return err
 }
@@ -1404,15 +1493,15 @@ func (r *EmployeeRepository) GetSalarySlipsByMgrID(mgrID string) []models.Salary
 func (r *EmployeeRepository) EditSalarySlipByID(sal *models.SalarySlip) error {
 	err := r.C.Update(bson.M{"_id": sal.ID},
 		bson.M{"$set": bson.M{
-			"stardate": 				sal.StartDate,
-			"enddate":  				sal.EndDate,
-			"issalarysliptimesheet":    sal.IsSalarySlipTimesheet,
-			"workinghours":				sal.WorkingHours,
-			"paymentdays":  			sal.PaymentDays,
-			"designation":				sal.Designation, 
-			"grosspay":					sal.GrossPay, 
-			"interestamount":			sal.InterestAmount, 
-			"updatedat":				time.Now(),
+			"stardate":              sal.StartDate,
+			"enddate":               sal.EndDate,
+			"issalarysliptimesheet": sal.IsSalarySlipTimesheet,
+			"workinghours":          sal.WorkingHours,
+			"paymentdays":           sal.PaymentDays,
+			"designation":           sal.Designation,
+			"grosspay":              sal.GrossPay,
+			"interestamount":        sal.InterestAmount,
+			"updatedat":             time.Now(),
 		}})
 	return err
 }
@@ -1469,11 +1558,11 @@ func (r *EmployeeRepository) GetActivityCostsByTypeID(typeID string) []models.Ac
 func (r *EmployeeRepository) EditActivityCostByID(cost *models.ActivityCost) error {
 	err := r.C.Update(bson.M{"_id": cost.ID},
 		bson.M{"$set": bson.M{
-			"activitytype":		cost.ActivityType, 
-			"costingrate":		cost.CostingRate, 
-			"billingrate":		cost.BillingingRate,
-			"status":			cost.Status,
-			"updatedat":		time.Now(),
+			"activitytype": cost.ActivityType,
+			"costingrate":  cost.CostingRate,
+			"billingrate":  cost.BillingRate,
+			"status":       cost.Status,
+			"updatedat":    time.Now(),
 		}})
 	return err
 }
