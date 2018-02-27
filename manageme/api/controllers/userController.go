@@ -58,7 +58,7 @@ func SignUp(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
-//SignIn for /admin/users/signin api
+//SignIn for /users/signin api
 func SignIn(w http.ResponseWriter, r *http.Request) {
 	var dataRes SignInResource
 	var token string
@@ -149,7 +149,7 @@ func GetUsers(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
-//GetUser for /admin/users/{id} api
+//GetUser for /users/{id} api
 func GetUser(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id = vars["id"]
@@ -186,8 +186,42 @@ func GetUser(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
-//EditUser for /admin/users/edit/{id} api
+//EditUser for /users/edit/{id} api
 func EditUser(w http.ResponseWriter, *http.Request) {
+	vars := mux.Vars(r)
+	id = bson.ObjectIdHex(vars["id"])
+	var dataResource UserResource
+	err := json.NewDecoder(r.Body).Decode(&dataResource)
+	if err != nil {
+		common.DisplayAppError(
+			w,
+			err,
+			"Invalid user data",
+			500,
+		)
+		return
+	}
+	user := &dataResource.Data
+	user.ID = id
+	context := NewContext()
+	defer context.Close()
+	col := context.DbCollection("users")
+	repo := &data.UserRepository{C: col}
+	
+	err := repo.EditUserByID(user); err != nil {
+		common.DisplayAppError(
+			w,
+			err,
+			"An unexpected error has occured",
+			500,
+		)
+		return
+	}
+	w.WriteHeader(http.StatusNoContent)
+}
+
+//EditUser for /admin/users/edit/{id} api
+func EditUserByAdmin(w http.ResponseWriter, *http.Request) {
 	vars := mux.Vars(r)
 	id = bson.ObjectIdHex(vars["id"])
 	var dataResource UserResource

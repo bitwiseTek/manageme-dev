@@ -60,7 +60,7 @@ func AddBilling(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
-//GetBills for /orgs/billings api
+//GetBills for /admin/orgs/billings api
 func GetBillings(w http.ResponseWriter, r *http.Request) {
 	context := NewContext()
 	defer context.Close()
@@ -194,6 +194,8 @@ func EditBillingByAdmin(w http.ResponseWriter, *http.Request) {
 	w.WriteHeader(http.StatusNoContent)
 }
 
+//Delete Billing - TBA
+
 //AddTransaction for /orgs/billings/transactions/add api
 func AddTransaction(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
@@ -234,7 +236,7 @@ func AddTransaction(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
-//GetTransactions for /orgs/billings/transactions api
+//GetTransactions for /admin/orgs/billings/transactions api
 func GetTransactions(w http.ResponseWriter, r *http.Request) {
 	context := NewContext()
 	defer context.Close()
@@ -367,3 +369,5 @@ func EditTransactionByAdmin(w http.ResponseWriter, *http.Request) {
 	}
 	w.WriteHeader(http.StatusNoContent)
 }
+
+//Delete Transaction - TBA

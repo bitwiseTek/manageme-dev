@@ -1123,9 +1123,9 @@ func (r *EmployeeRepository) GetSalaryComponentsByOrgID(orgID string) []models.S
 func (r *EmployeeRepository) EditSalaryComponentByID(sal *models.SalaryComponent) error {
 	err := r.C.Update(bson.M{"_id": sal.ID},
 		bson.M{"$set": bson.M{
-			"name": 		   sal.Name,
-			"type":   		   sal.Type,
-			"description":     sal.Description,
+			"name":        sal.Name,
+			"type":        sal.Type,
+			"description": sal.Description,
 		}})
 	return err
 }

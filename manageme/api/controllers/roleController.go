@@ -20,7 +20,7 @@ import (
 	"github.com/bitwiseTek/manageme-dev/manageme/api/common"
 )
 
-//AddRole for /roles/add api
+//AddRole for /orgs/roles/add api
 func AddRole(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	orgid = bson.ObjectIdHex(vars["orgid"])
@@ -60,7 +60,7 @@ func AddRole(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
-//GetRoles for /roles api
+//GetRoles for /orgs/roles api
 func GetRoles(w http.ResponseWriter, r *http.Request) {
 	context := NewContext()
 	defer context.Close()
@@ -84,7 +84,7 @@ func GetRoles(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
-//GetRolesByOrg for /org/roles api
+//GetRolesByOrg for /org/roles/org/{orgId} api
 func GetRolesByOrg(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	orgid = bson.ObjectIdHex(vars["orgid"])
@@ -123,7 +123,7 @@ func GetRolesByOrg(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
-//GetRole for /roles/{id} api
+//GetRole for /org/roles/{id} api
 func GetRole(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id = vars["id"]
@@ -160,7 +160,7 @@ func GetRole(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
-//EditRole for /roles/edit/{id} api
+//EditRole for /orgs/roles/edit/{id} api
 func EditRoleByAdmin(w http.ResponseWriter, *http.Request) {
 	vars := mux.Vars(r)
 	id = bson.ObjectIdHex(vars["id"])
@@ -196,7 +196,7 @@ func EditRoleByAdmin(w http.ResponseWriter, *http.Request) {
 
 //Delete Role - TBA
 
-//AddPermission for /permissions/add api
+//AddPermission for /orgs/permissions/add api
 func AddPermission(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	orgid = bson.ObjectIdHex(vars["orgid"])
@@ -236,7 +236,7 @@ func AddPermission(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
-//GetPermissions for /permissions api
+//GetPermissions for /orgs/permissions api
 func GetPermissions(w http.ResponseWriter, r *http.Request) {
 	context := NewContext()
 	defer context.Close()
@@ -260,7 +260,7 @@ func GetPermissions(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
-//GetPermissionsByOrg for /org/permissions api
+//GetPermissionsByOrg for /orgs/permissions/org/{orgId} api
 func GetPermissionsByOrg(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	orgid = bson.ObjectIdHex(vars["orgid"])
@@ -299,7 +299,7 @@ func GetPermissionsByOrg(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
-//GetPermission for /permissions/{id} api
+//GetPermission for /orgs/permissions/{id} api
 func GetPermission(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id = vars["id"]
@@ -336,7 +336,7 @@ func GetPermission(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
-//EditPermission for /permissions/edit/{id} api
+//EditPermission for /orgs/permissions/edit/{id} api
 func EditPermissionByAdmin(w http.ResponseWriter, *http.Request) {
 	vars := mux.Vars(r)
 	id = bson.ObjectIdHex(vars["id"])

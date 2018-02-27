@@ -636,7 +636,7 @@ func AddEduByBio(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
-//GetBiosByEmp for /orgs/employees/biodatas/employee/{empId} api
+//GetBiosByEmp for /orgs/employees/biodatas/employees/{empId} api
 func GetBiosByEmp(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	empid = bson.ObjectIdHex(vars["empid"])
@@ -1002,7 +1002,7 @@ func EditPIDByAdmin(w http.ResponseWriter, *http.Request) {
 
 //Delete PID - TBA
 
-//GetHealthDetailsByBio for /orgs/employees/health/details/{bioId} api
+//GetHealthDetailsByBio for /orgs/employees/health/details/biodatas/{bioId} api
 func GetHealthDetsByBio(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	bioid = bson.ObjectIdHex(vars["bioid"])
@@ -1298,7 +1298,7 @@ func GetWorkExperienceByBio(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
-//EditWorkExperienceByBio for /orgs/employees/work/experiences/edit/biodata/{bioId} api
+//EditWorkExperienceByBio for /orgs/employees/work/experiences/biodata/edit/{bioId} api
 func EditWorkExperienceByBio(w http.ResponseWriter, *http.Request) {
 	vars := mux.Vars(r)
 	bioid = bson.ObjectIdHex(vars["bioid"])
@@ -1481,7 +1481,7 @@ func GetEduByBio(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
-//EditEduByBio for /orgs/employees/educations/edit/biodata/{bioId} api
+//EditEduByBio for /orgs/employees/educations/biodata/edit/{bioId} api
 func EditEduByBio(w http.ResponseWriter, *http.Request) {
 	vars := mux.Vars(r)
 	bioid = bson.ObjectIdHex(vars["bioid"])
@@ -2699,7 +2699,7 @@ func GetAppraisalsByOrg(w http.ResponseWriter, r *http.Request) {
 }
 
 //GetAppraisalsByEmp for /orgs/employees/appraisals/employee/{empId} api
-func GetAppraisalsByEmp(w http.ResponseWriter, r *http.Request) {
+func GetAppraisalsByMgr(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	empid = bson.ObjectIdHex(vars["empid"])
 	context := NewContext()
@@ -2849,8 +2849,8 @@ func GetExitsByOrg(w http.ResponseWriter, r *http.Request) {
 	w.Write(j)
 }
 
-//GetExitsByEmp for /orgs/employees/exits/employee/{empId} api
-func GetExitsByEmp(w http.ResponseWriter, r *http.Request) {
+//GetExitsByMgr for /orgs/employees/exits/employee/{empId} api
+func GetExitsByMgr(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	empid = bson.ObjectIdHex(vars["empid"])
 	context := NewContext()
@@ -3861,7 +3861,7 @@ func GetActivitytTypesByOrg(w http.ResponseWriter, r *http.Request) {
 }
 
 //GetActivityType for /orgs/employees/activity/types/{id} api
-func GetSalaryActivityType(w http.ResponseWriter, r *http.Request) {
+func GetActivityType(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id = vars["id"]
 	context := NewContext()

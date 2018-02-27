@@ -22,8 +22,7 @@ func SetUserRoutes(router *mux.Router) *mux.Router {
 	userRouter.HandleFunc("/api/v1/admin/users/", controllers.GetUsers).Methods("GET")
 	userRouter.HandleFunc("/api/v1/users/edit/{id}", controllers.Edit).Methods("PUT")
 	userRouter.HandleFunc("/api/v1/users/{id}", controllers.GetById).Methods("GET")
-	userRouter.HandleFunc("/api/v1/admin/users/{id}", controllers.GetUserById).Methods("GET")
-	userRouter.HandleFunc("/api/v1/admin/users/edit/{id}", controllers.EditUser).Methods("PUT")
+	userRouter.HandleFunc("/api/v1/admin/users/edit/{id}", controllers.EditUserByAdmin).Methods("PUT")
 	router.PathPrefix("/api/v1/admin/users/").Handler(negroni.New(
 		negroni.HandlerFunc(common.Authorize),
 		negroni.Wrap(userRouter),
