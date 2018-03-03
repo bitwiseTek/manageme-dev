@@ -1143,10 +1143,10 @@ func (r *EmployeeRepository) GetSalaryEmployeesByOrgID(orgID string) []models.Sa
 	iter := r.C.Find(bson.M{"orgid": orgid}).Iter()
 	result := models.SalaryEmployee{}
 	for iter.Next(&result) {
-		employees := result.Employees
-		for _, e := range employees {
+		//employees := result.Employees
+		/*for _, e := range employees {
 			//e = append(e, result)
-		}
+		}*/
 	}
 	return salEmployees
 }

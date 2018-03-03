@@ -62,7 +62,7 @@ func (r *OrgUserRepository) GetOrgUserByID(id string) (users models.OrgUser, err
 func (r *OrgUserRepository) GetUsersByOrgID(orgID string) []models.OrgUser {
 	var users []models.OrgUser
 	orgid := bson.ObjectIdHex(orgID)
-	iter := r.C.Find(bson.M{"orgid": orgID}).Iter()
+	iter := r.C.Find(bson.M{"orgid": orgid}).Iter()
 	result := models.OrgUser{}
 	for iter.Next(&result) {
 		users = append(users, result)

@@ -157,10 +157,10 @@ func (r *ProjectRepository) GetProjectTasks() []models.ProjectTask {
 	iter := r.C.Find(nil).Iter()
 	result := models.ProjectTask{}
 	for iter.Next(&result) {
-		tasks := result.Tasks
-		for _, t := range tasks {
+		//tasks := result.Tasks
+		/*for _, t := range tasks {
 			t = append(t, result)
-		}
+		}*/
 	}
 	return projectTasks
 }
@@ -172,10 +172,10 @@ func (r *ProjectRepository) GetProjectTasksByOrgID(orgID string) []models.Projec
 	iter := r.C.Find(bson.M{"orgid": orgid}).Iter()
 	result := models.ProjectTask{}
 	for iter.Next(&result) {
-		tasks := result.Tasks
-		for _, t := range tasks {
+		//tasks := result.Tasks
+		/*for _, t := range tasks {
 			t = append(t, result)
-		}
+		}*/
 	}
 	return projectTasks
 }

@@ -57,10 +57,10 @@ func (r *RoleRepository) GetRolesByOrgID(orgID string) []models.Role {
 	iter := r.C.Find(bson.M{"orgid": orgid}).Iter()
 	result := models.Role{}
 	for iter.Next(&result) {
-		permissions := result.Permissions
-		for _, p := range permissions {
+		//permissions := result.Permissions
+		/*for _, p := range permissions {
 			p = append(p, result)
-		}
+		}*/
 	}
 	return roles
 }
